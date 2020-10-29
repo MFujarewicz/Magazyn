@@ -87,7 +87,7 @@ public class Rectangle {
 		}
 
 		if (object.getClass() != this.getClass()) {
-            return false;
+			return false;
 		}
 		
 		final Rectangle other_rectangle = (Rectangle)object;
@@ -97,5 +97,15 @@ public class Rectangle {
 				other_rectangle.width == width &&
 				other_rectangle.height == height &&
 				other_rectangle.angle == angle;
+	}
+
+	double[] toArray() {
+		return new double[] {
+			getLeft(),
+			getTop(),
+			getWidth(),
+			getHeight(),
+			getAngle()
+		};
 	}
 }
