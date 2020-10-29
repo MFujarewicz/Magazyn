@@ -16,11 +16,11 @@ public class Rectangle {
 	}
 
 	public Rectangle(double left, double top, double width, double height, double angle) {
-		this.left = left;
-		this.top = top;
-		this.width = width;
-		this.height = height;
-		this.angle = angle;
+		setLeft(left);
+		setTop(top);
+		setWidth(width);
+		setHeight(height);
+		setAngle(angle);
 	}
 
 	double getLeft() {
@@ -60,6 +60,15 @@ public class Rectangle {
 	}
 
 	void setAngle(double angle) {
+		//Angle should be in [0, 2* PI]
+		while (angle > 2 * Math.PI) {
+			angle -= 2 * Math.PI;
+		}
+
+		while (angle < 0) {
+			angle += 2 * Math.PI;
+		}
+
 		this.angle = angle;
 	}
 
