@@ -1,0 +1,56 @@
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>526</x><y>233</y><w>240</w><h>90</h></coordinates><panel_attributes>&lt;&lt;Iterface&gt;&gt;
+Map::IRack
+--
+/+isTwoSided(): boolean/
+/+numberOfAllocationUnitsPerRow(): long/
+/+numberOfRows(): long/
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>526</x><y>423</y><w>210</w><h>90</h></coordinates><panel_attributes>&lt;&lt;Iterface&gt;&gt;
+Map::IMapObject
+--
+/+getBounds(): Rectangle /
+/+getObjectUUID(): UUID /</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>616</x><y>313</y><w>30</w><h>130</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;110;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>296</x><y>13</y><w>210</w><h>70</h></coordinates><panel_attributes>&lt;&lt;Iterface&gt;&gt;
+Map::IRackFactory 
+--
+/+createRack(rack_data: JSONObject)/
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>876</x><y>173</y><w>310</w><h>190</h></coordinates><panel_attributes>Map::Rack
+--
+-uuid: UUID
+-bounds: Rectrangle
+-is_two_sided: boolean
+-number_of_allocation_units_per_row : long
+-number_of_rows : long
+--
++Rack(uuid: UUID)
++setBounds(bounds: Rectangle)
++twoSided(two_sided: boolean)
++setNumberOfAllocationUnitsPerRow(number: long)
++setNumberOfRows(number: long)
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>876</x><y>13</y><w>210</w><h>30</h></coordinates><panel_attributes>Map::RackFactory 
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>756</x><y>263</y><w>140</w><h>30</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;10;120;10</additional_attributes></element><element><id>Relation</id><coordinates><x>496</x><y>23</y><w>400</w><h>30</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;10;380;10</additional_attributes></element><element><id>Relation</id><coordinates><x>946</x><y>33</y><w>30</w><h>160</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;140;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>195</y><w>310</w><h>220</h></coordinates><panel_attributes>Map::MapParser
+--
+-racks: List
+-flie_path: String
+-is_good: boolean
+--
++MapParser()
++MapParser(flie_path: String)
+
++isFileGood(): boolean
++exec(): boolean
++exec(data: String): boolean
++getMap(): Map
+
+-getFactoryByName(name: String): IRackFactory 
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>220</x><y>495</y><w>250</w><h>210</h></coordinates><panel_attributes>Package::Map
+--
+-racks: List&lt;IRack&gt;
+-grid_size: int
+-grid: bool[][]
+--
++Map(racks: List&lt;IRack&gt;, grid_size: int)
+
++isValid(): boolean
++getGridSize(): int
++getRacks(): List&lt;IRack&gt;
++getMap(): bool[][]</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>304</x><y>263</y><w>240</w><h>30</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;220;10</additional_attributes></element><element><id>Relation</id><coordinates><x>10</x><y>53</y><w>300</w><h>160</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;140;10;10;280;10</additional_attributes></element><element><id>Relation</id><coordinates><x>330</x><y>293</y><w>210</w><h>220</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;200;10;10;190;10</additional_attributes></element><element><id>Relation</id><coordinates><x>60</x><y>33</y><w>870</w><h>180</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;160;10;90;850;90;850;10</additional_attributes></element><element><id>Relation</id><coordinates><x>80</x><y>403</y><w>160</w><h>230</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>140;210;10;210;10;10</additional_attributes></element></diagram>
