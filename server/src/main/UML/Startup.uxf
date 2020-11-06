@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.baselet.element.old.allinone.ActivityDiagramText</type>
+    <coordinates>
+      <x>20</x>
+      <y>20</y>
+      <w>970</w>
+      <h>866</h>
+    </coordinates>
+    <panel_attributes>title:Server Startup
+Start
+
+If
+	[map file is not present]
+	Generate error message
+	Abort server start
+	
+	[map file is present]
+	Read map file
+	If
+		[map cannot be loaded]
+		Generate error message
+		Abort server start
+
+		[map is loaded]
+		Run map validation
+		If
+			[map is not vbalid]
+			Generate error message
+			Abort server start
+
+			[map is valid]
+			Create Map
+			Continue server startup
+
+Hand over server \ control to Spring
+		
+End
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
