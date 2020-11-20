@@ -63,10 +63,10 @@ name: String
       <w>210</w>
       <h>220</h>
     </coordinates>
-    <panel_attributes>Jobs
+    <panel_attributes>Job
 --
 type: enum
-ID_rzeczy: Integer
+product_id: Integer
 assigned: Integer
 data: DateTime
 --
@@ -76,32 +76,6 @@ type: enum[
 /take_in/
 /take_out/
 ]</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>940</x>
-      <y>320</y>
-      <w>230</w>
-      <h>250</h>
-    </coordinates>
-    <panel_attributes>Product
---
-ID: Integer
-Product_data: Integer
-state: enum
-bool: done
---
-&lt;&lt;PK&gt;&gt; ID_rack, Rack_placement
-
-type: enum[
-/to_be_stored/
-/in_storage/
-/to_be_taken/
-/done/
-]
-</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -135,14 +109,14 @@ Product.ID_type = Type.ID</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>670</x>
+      <x>740</x>
       <y>100</y>
       <w>230</w>
       <h>130</h>
     </coordinates>
     <panel_attributes>ProductLocation
 --
-ID: Integer
+product_id: Integer
 ID_rack: Integer
 Rack_placement: Integer
 --
@@ -152,16 +126,16 @@ Rack_placement: Integer
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>720</x>
+      <x>790</x>
       <y>220</y>
-      <w>240</w>
+      <w>230</w>
       <h>160</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=1
 m2=1
 ProductLocation.ID = Product.ID</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;130.0;220.0;130.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;130.0;150.0;130.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -188,7 +162,33 @@ ProductLocation.ID = Product.ID</panel_attributes>
     <panel_attributes>lt=-
 m1=1
 m2=*
-ProductData.ID = Product.ID</panel_attributes>
+ProductData.ID = Product.product_data</panel_attributes>
     <additional_attributes>10.0;10.0;140.0;10.0;140.0;110.0;310.0;110.0;310.0;240.0;560.0;240.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>940</x>
+      <y>320</y>
+      <w>230</w>
+      <h>250</h>
+    </coordinates>
+    <panel_attributes>Product
+--
+ID: Integer
+product_data_id: Integer
+state: enum
+done: boolean
+--
+&lt;&lt;PK&gt;&gt; ID_rack, Rack_placement
+
+type: enum[
+/to_be_stored/
+/in_storage/
+/to_be_taken/
+/done/
+]
+</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>
