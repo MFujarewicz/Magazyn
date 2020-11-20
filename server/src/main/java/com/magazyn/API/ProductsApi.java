@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ProductsApi {
 
-    @GetMapping("/api/products/*")
+    @GetMapping("/api/products/**")
     public String showError() {
         throw new NoEndPointException();
     }
