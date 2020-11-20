@@ -1,4 +1,4 @@
-package com.example.magazyn.database;
+package com.magazyn.database;
 
 import javax.persistence.*;
 

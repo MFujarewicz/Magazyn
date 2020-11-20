@@ -1,6 +1,6 @@
-package com.example.magazyn.database.repositories;
+package com.magazyn.database.repositories;
 
-import com.example.magazyn.database.ProductLocation;
+import com.magazyn.database.ProductLocation;
 import org.springframework.data.repository.CrudRepository;
 
 public interface ProductLocationRepository extends CrudRepository<ProductLocation, Integer>{

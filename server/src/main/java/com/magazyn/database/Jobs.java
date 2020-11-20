@@ -1,6 +1,6 @@
-package com.example.magazyn.database;
+package com.magazyn.database;
 
-import com.example.magazyn.JobType;
+import com.magazyn.JobType;
 
 import javax.persistence.*;
 import java.util.Date;

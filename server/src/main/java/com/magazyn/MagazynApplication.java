@@ -1,11 +1,8 @@
-package com.example.magazyn;
+package com.magazyn;
 
-import com.example.magazyn.database.Jobs;
-import com.example.magazyn.database.Product;
-import com.example.magazyn.database.repositories.JobsRepository;
-import com.example.magazyn.database.repositories.ProductRepository;
-import com.example.magazyn.database.Type;
-import com.example.magazyn.database.repositories.TypeRepository;
+import com.magazyn.database.Jobs;
+import com.magazyn.database.repositories.JobsRepository;
+import com.magazyn.database.repositories.ProductRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

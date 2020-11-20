@@ -1,6 +1,6 @@
-package com.example.magazyn.database;
+package com.magazyn.database;
 
-import com.example.magazyn.State;
+import com.magazyn.State;
 
 import javax.persistence.*;
 
