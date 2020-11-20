@@ -70,7 +70,7 @@ product_id: Integer
 assigned: Integer
 data: DateTime
 --
-&lt;&lt;PK&gt;&gt; ID_rzeczy, type
+&lt;&lt;PK&gt;&gt; product_id, type
 
 type: enum[
 /take_in/
@@ -180,7 +180,7 @@ product_data_id: Integer
 state: enum
 done: boolean
 --
-&lt;&lt;PK&gt;&gt; ID_rack, Rack_placement
+&lt;&lt;PK&gt;&gt; ID
 
 type: enum[
 /to_be_stored/
