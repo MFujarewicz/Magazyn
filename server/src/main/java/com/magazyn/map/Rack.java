@@ -54,5 +54,13 @@ public class Rack implements IRack {
 	public long numberOfRows() {
 		return number_of_rows;
 	}
+
+	@Override
+	public int hashCode() {
+		long hash = rack_uuid.getLeastSignificantBits();
+		hash ^= rack_uuid.getMostSignificantBits() + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+
+		return Long.hashCode(hash);
+	}
 	
 }

@@ -26,4 +26,7 @@ public interface IRack extends IMapObject{
 	 */
 	public long numberOfAllocationUnitsPerRow();
 	public long numberOfRows();
+
+	@Override
+	public int hashCode();
 }
