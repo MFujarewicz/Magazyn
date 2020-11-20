@@ -12,7 +12,7 @@ public class Type {
     private String name;
 
     @OneToMany(mappedBy = "type")
-    private List<Product> products;
+    private List<ProductData> productData;
 
     public Type(String name) {
         this.name = name;

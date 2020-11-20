@@ -4,22 +4,21 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "Product_location")
 //@IdClass(ProductLocationId)
 public class ProductLocation {
     @Id
     private Integer rack_id;
 //    @Id
-//    private Integer place_number;
+//    private Integer rack_placement;
 
     private Integer product_id;
 
 //    @OneToMany(mappedBy = "type")
 //    private List<Product> products;
 
-    public ProductLocation(Integer rack_id, Integer place_number, Integer product_id) {
+    public ProductLocation(Integer rack_id, Integer rack_placement, Integer product_id) {
         this.rack_id = rack_id;
-//        this.place_number = place_number;
+//        this.rack_placement = rack_placement;
         this.product_id = product_id;
     }
 
@@ -35,11 +34,11 @@ public class ProductLocation {
     }
 
 //    public Integer getPlace_number() {
-//        return place_number;
+//        return rack_placement;
 //    }
 //
-//    public void setPlace_number(Integer place_number) {
-//        this.place_number = place_number;
+//    public void setPlace_number(Integer rack_placement) {
+//        this.rack_placement = rack_placement;
 //    }
 
     public Integer getProduct_id() {

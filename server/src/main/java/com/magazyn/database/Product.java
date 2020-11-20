@@ -1,71 +1,62 @@
 package com.magazyn.database;
 
+import com.magazyn.State;
+
 import javax.persistence.*;
 
 @Entity
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer ID;
 
-    private String name;
+//    @OneToOne
+//    @JoinColumn(name = "product_data_id")
+//    private Product product;
 
-    private double weight;
+//    @OneToOne(mappedBy = "product_id")
+//    private Job jobs;
 
-    @ManyToOne
-    @JoinColumn(name = "type_id")
-    private Type type;
+    @Enumerated(EnumType.ORDINAL)
+    private State state;
 
-//    @OneToOne(mappedBy = "all_things")
-//    private AllThings allThings;
-
-    public Product(String name, double weight, Type type) {
-        this.name = name;
-        this.weight = weight;
-        this.type = type;
+    public Product(ProductData productData, Job job, State state) {
+//        this.product = product;
+//        this.job = job;
+        this.state = state;
     }
-
 
     public Product() {
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getID() {
+        return ID;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setID(Integer id) {
+        this.ID = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getWeight() {
-        return name;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-//    public AllThings getAllThings() {
-//        return allThings;
+//    public Product getProduct() {
+//        return product;
 //    }
 //
-//    public void setAllThings(AllThings allThings) {
-//        this.allThings = allThings;
+//    public void setProduct(Product product) {
+//        this.product = product;
 //    }
+
+//    public Job getJobs() {
+//        return jobs;
+//    }
+//
+//    public void setJobs(Job jobs) {
+//        this.jobs = jobs;
+//    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
 }
