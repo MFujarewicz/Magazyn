@@ -45,8 +45,8 @@ public class ProductData {
         this.name = name;
     }
 
-    public String getWeight() {
-        return name;
+    public double getWeight() {
+        return weight;
     }
 
     public void setWeight(double weight) {
