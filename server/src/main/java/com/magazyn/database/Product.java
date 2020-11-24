@@ -17,7 +17,7 @@ public class Product {
     @Enumerated(EnumType.ORDINAL)
     private State state;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Job> jobs;
 
     @OneToOne(mappedBy = "product")

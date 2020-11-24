@@ -21,7 +21,7 @@ public class ProductData {
     @JoinColumn(name = "ID_manufacturer")
     private Manufacturer manufacturer;
 
-    @OneToMany(mappedBy = "productData")
+    @OneToMany(mappedBy = "productData", cascade = CascadeType.ALL)
     private List<Product> product;
 
     public ProductData(String name, double weight, Type type, Manufacturer manufacturer) {

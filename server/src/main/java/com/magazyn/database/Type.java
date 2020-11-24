@@ -11,7 +11,7 @@ public class Type {
 
     private String name;
 
-    @OneToMany(mappedBy = "type")
+    @OneToMany(mappedBy = "type", cascade = CascadeType.ALL)
     private List<ProductData> productData;
 
     public Type(String name) {
