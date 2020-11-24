@@ -20,9 +20,9 @@ public class MagazynApplication {
     public CommandLineRunner demo(ProductDataRepository repo1 , JobRepository repo2) throws Exception {
         return (args) -> {
 //            Type type = new Type("typ");
-            Job job = new Job();
+//            Job job = new Job();
 //            Product p = new Product("p1", 5, type);
-            repo2.save(job);
+//            repo2.save(job);
 //            repo1.save(p);
         };
     }

@@ -3,21 +3,25 @@ package com.magazyn.database;
 import com.magazyn.State;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Product {
     @Id
     private Integer ID;
 
-//    @OneToOne
-//    @JoinColumn(name = "product_data_id")
-//    private Product product;
-
-//    @OneToOne(mappedBy = "product_id")
-//    private Job jobs;
+    @ManyToOne
+    @JoinColumn(name = "product_data_id")
+    private ProductData productData;
 
     @Enumerated(EnumType.ORDINAL)
     private State state;
+
+    @OneToMany(mappedBy = "product")
+    private List<Job> jobs;
+
+    @OneToOne(mappedBy = "product")
+    private ProductLocation productLocation;
 
     public Product(ProductData productData, Job job, State state) {
 //        this.product = product;
@@ -36,21 +40,21 @@ public class Product {
         this.ID = id;
     }
 
-//    public Product getProduct() {
-//        return product;
-//    }
-//
-//    public void setProduct(Product product) {
-//        this.product = product;
-//    }
+    public ProductData getProductData() {
+        return productData;
+    }
 
-//    public Job getJobs() {
-//        return jobs;
-//    }
-//
-//    public void setJobs(Job jobs) {
-//        this.jobs = jobs;
-//    }
+    public void setProductData(ProductData productData) {
+        this.productData = productData;
+    }
+
+    public List<Job> getJobs() {
+        return jobs;
+    }
+
+    public void setJobs(List<Job> jobs) {
+        this.jobs = jobs;
+    }
 
     public State getState() {
         return state;
@@ -58,5 +62,13 @@ public class Product {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public ProductLocation getProductLocation() {
+        return productLocation;
+    }
+
+    public void setProductLocation(ProductLocation productLocation) {
+        this.productLocation = productLocation;
     }
 }

@@ -1,6 +1,7 @@
 package com.magazyn.database;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class ProductData {
@@ -20,6 +21,8 @@ public class ProductData {
     @JoinColumn(name = "ID_manufacturer")
     private Manufacturer manufacturer;
 
+    @OneToMany(mappedBy = "productData")
+    private List<Product> product;
 
     public ProductData(String name, double weight, Type type) {
         this.name = name;
@@ -63,5 +66,19 @@ public class ProductData {
         this.type = type;
     }
 
+    public Manufacturer getManufacturer() {
+        return manufacturer;
+    }
 
+    public void setManufacturer(Manufacturer manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public List<Product> getProducts() {
+        return product;
+    }
+
+    public void setProducts(List<Product> product) {
+        this.product = product;
+    }
 }

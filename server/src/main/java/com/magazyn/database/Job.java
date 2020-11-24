@@ -6,24 +6,23 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@IdClass(JobId.class)
 public class Job {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-
     @Enumerated(EnumType.ORDINAL)
     private JobType jobType;
 
-//    @OneToOne
-//    @JoinColumn(name = "product_id")
-//    private Product allThings;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     private Integer assigned;
 
     private Date date = new Date();
 
     public Job(JobType jobType, Product product, Integer assigned) {
-        this.jobType = jobType;
+//        this.jobType = jobType;
 //        this.product = product;
         this.assigned = assigned;
     }
@@ -37,6 +36,14 @@ public class Job {
 
     public void setJobType(JobType jobType) {
         this.jobType = jobType;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Integer getAssigned() {
