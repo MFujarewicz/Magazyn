@@ -29,18 +29,18 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ProductsApi {
+public class ProductDataApi {
     @Autowired
     ProductDataRepository product_data_repository;
     @Autowired
     TypeRepository type_repository;
 
-    @RequestMapping(value = "/api/product/**")
+    @RequestMapping(value = "/api/product_data/**")
     public String showError() {
         throw new NoEndPointException();
     }
 
-    @GetMapping("/api/product/id/{id}/{joined}")
+    @GetMapping("/api/product_data/id/{id}/{joined}")
     public String getSingleProductsData(@PathVariable int id, @PathVariable boolean joined) {
 
         Optional<ProductData> product_data = product_data_repository.findById(id);
@@ -54,7 +54,7 @@ public class ProductsApi {
         return response.toString();
     }
 
-    @GetMapping("/api/product/all/{joined}")
+    @GetMapping("/api/product_data/all/{joined}")
     public String getAllProductsData(@PathVariable(value = "joined") boolean joined) {
         Iterable<ProductData> products_data = product_data_repository.findAll();
 
@@ -65,7 +65,7 @@ public class ProductsApi {
             products_data_array.put(ProductDataToJSON(product_data, joined));
         }
 
-        response.put("types", products_data_array);
+        response.put("product_data", products_data_array);
 
         return response.toString();
     }
@@ -76,7 +76,7 @@ public class ProductsApi {
      * @param allRequestParams Parameters for search query
      * @return JSON with requested query
      */
-    @GetMapping("/api/product/search/{joined}/{query_args}")
+    @GetMapping("/api/product_data/search/{joined}/{query_args}")
     public String getProductsData(@PathVariable boolean joined, @PathVariable String query_args, @RequestParam Map<String, String> allRequestParams) {
         query_args = new String(Base64.getUrlDecoder().decode(query_args));
 
@@ -92,7 +92,7 @@ public class ProductsApi {
         return query.fromKeyWords(query_args);
     }
 
-    @PutMapping("/api/product/id/{id}")
+    @PutMapping("/api/product_data/id/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
     public void setTypeById(@PathVariable int id, @RequestParam Map<String, String> allRequestParams) {
@@ -109,7 +109,7 @@ public class ProductsApi {
         product_data_repository.save(product_data);
     }
     
-    @PutMapping("/api/product/add/")
+    @PutMapping("/api/product_data/add/")
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
     public void addType(@RequestParam Map<String, String> allRequestParams) {
@@ -125,11 +125,15 @@ public class ProductsApi {
         product_data_repository.save(product_data);
     }
 
-    @DeleteMapping("/api/product/id/{id}")
+    @DeleteMapping("/api/product_data/id/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     public void delTypesById(@PathVariable int id) {
+        try {
         product_data_repository.deleteById(id);
+        } catch (Exception exception) {
+            throw new NoResourceFoundException();
+        }
     }
 
     /**

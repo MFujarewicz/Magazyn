@@ -148,6 +148,10 @@ public class TypeApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     public void delTypesById(@PathVariable int id) {
+        try {
         type_repository.deleteById(id);
+        } catch (Exception exception) {
+            throw new NoResourceFoundException();
+        }
     }
 }
