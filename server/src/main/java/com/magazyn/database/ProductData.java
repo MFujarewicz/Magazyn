@@ -16,8 +16,10 @@ public class ProductData {
     @JoinColumn(name = "ID_type")
     private Type type;
 
-//    @OneToOne(mappedBy = "all_things")
-//    private Product allThings;
+    @ManyToOne
+    @JoinColumn(name = "ID_manufacturer")
+    private Manufacturer manufacturer;
+
 
     public ProductData(String name, double weight, Type type) {
         this.name = name;
@@ -61,11 +63,5 @@ public class ProductData {
         this.type = type;
     }
 
-//    public Product getAllThings() {
-//        return allThings;
-//    }
-//
-//    public void setAllThings(Product allThings) {
-//        this.allThings = allThings;
-//    }
+
 }
