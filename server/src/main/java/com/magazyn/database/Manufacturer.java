@@ -11,7 +11,7 @@ public class Manufacturer {
 
     private String name;
 
-    @OneToMany(mappedBy = "manufacturer")
+    @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL)
     private List<ProductData> productData;
 
     public Manufacturer(String name) {
