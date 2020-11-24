@@ -34,7 +34,7 @@ public class TypeApi {
     }
 
     @GetMapping("/api/type/all/")
-    public String getAllTypess() {
+    public String getAllTypes() {
         Iterable<Type> all_types = type_repository.findAll();
 
         JSONObject response = new JSONObject();
@@ -147,7 +147,7 @@ public class TypeApi {
     @DeleteMapping("/api/type/id/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void delTypesById(@PathVariable int id) {
+    public void delTypeById(@PathVariable int id) {
         try {
         type_repository.deleteById(id);
         } catch (Exception exception) {
