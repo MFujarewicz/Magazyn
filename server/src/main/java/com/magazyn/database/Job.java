@@ -22,8 +22,8 @@ public class Job {
     private Date date = new Date();
 
     public Job(JobType jobType, Product product, Integer assigned) {
-//        this.jobType = jobType;
-//        this.product = product;
+        this.jobType = jobType;
+        this.product = product;
         this.assigned = assigned;
     }
 

@@ -24,10 +24,11 @@ public class ProductData {
     @OneToMany(mappedBy = "productData")
     private List<Product> product;
 
-    public ProductData(String name, double weight, Type type) {
+    public ProductData(String name, double weight, Type type, Manufacturer manufacturer) {
         this.name = name;
         this.weight = weight;
         this.type = type;
+        this.manufacturer = manufacturer;
     }
 
 

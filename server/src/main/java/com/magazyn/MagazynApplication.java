@@ -1,6 +1,7 @@
 package com.magazyn;
 
 import com.magazyn.database.Job;
+import com.magazyn.database.ProductData;
 import com.magazyn.database.repositories.JobRepository;
 import com.magazyn.database.repositories.ProductDataRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -17,13 +18,15 @@ public class MagazynApplication {
     }
 
     @Bean
-    public CommandLineRunner demo(ProductDataRepository repo1 , JobRepository repo2) throws Exception {
+    public CommandLineRunner demo(ProductDataRepository repo1, JobRepository repo2) throws Exception {
         return (args) -> {
 //            Type type = new Type("typ");
 //            Job job = new Job();
-//            Product p = new Product("p1", 5, type);
-//            repo2.save(job);
+//            ProductData p = new ProductData();
+//            p.setName("p1");
+////            repo2.save(job);
 //            repo1.save(p);
+//            System.out.println(repo1.findAllByName("p1").get(0).getID());
         };
     }
 

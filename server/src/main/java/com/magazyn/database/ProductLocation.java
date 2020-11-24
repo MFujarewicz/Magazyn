@@ -1,7 +1,6 @@
 package com.magazyn.database;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @IdClass(ProductLocationId.class)
@@ -18,7 +17,7 @@ public class ProductLocation {
 
     public ProductLocation(Integer ID_rack, Integer Rack_placement, Product product) {
         this.ID_rack = ID_rack;
-//        this.Rack_placement = Rack_placement;
+        this.Rack_placement = Rack_placement;
         this.product = product;
     }
 

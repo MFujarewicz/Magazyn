@@ -23,9 +23,8 @@ public class Product {
     @OneToOne(mappedBy = "product")
     private ProductLocation productLocation;
 
-    public Product(ProductData productData, Job job, State state) {
-//        this.product = product;
-//        this.job = job;
+    public Product(ProductData productData, State state) {
+        this.productData = productData;
         this.state = state;
     }
 
