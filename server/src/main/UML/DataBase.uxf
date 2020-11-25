@@ -5,8 +5,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>180</x>
-      <y>60</y>
+      <x>210</x>
+      <y>140</y>
       <w>210</w>
       <h>140</h>
     </coordinates>
@@ -25,8 +25,8 @@ ID_manufacturer: Integer
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>40</x>
-      <y>390</y>
+      <x>70</x>
+      <y>470</y>
       <w>210</w>
       <h>90</h>
     </coordinates>
@@ -42,8 +42,8 @@ name: String
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>290</x>
-      <y>390</y>
+      <x>320</x>
+      <y>470</y>
       <w>210</w>
       <h>90</h>
     </coordinates>
@@ -58,8 +58,8 @@ name: String
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>640</x>
-      <y>530</y>
+      <x>670</x>
+      <y>610</y>
       <w>210</w>
       <h>220</h>
     </coordinates>
@@ -81,8 +81,8 @@ type: enum[
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>60</x>
-      <y>150</y>
+      <x>90</x>
+      <y>230</y>
       <w>300</w>
       <h>260</h>
     </coordinates>
@@ -95,8 +95,8 @@ Product.ID_manufacturer = Manufacturer.ID</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>380</x>
-      <y>150</y>
+      <x>410</x>
+      <y>230</y>
       <w>240</w>
       <h>260</h>
     </coordinates>
@@ -109,8 +109,8 @@ Product.ID_type = Type.ID</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>740</x>
-      <y>0</y>
+      <x>770</x>
+      <y>80</y>
       <w>230</w>
       <h>130</h>
     </coordinates>
@@ -126,8 +126,8 @@ Rack_placement: Integer
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>790</x>
-      <y>120</y>
+      <x>820</x>
+      <y>200</y>
       <w>280</w>
       <h>160</h>
     </coordinates>
@@ -140,8 +140,8 @@ ProductLocation.product_id = Product.ID</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>660</x>
-      <y>370</y>
+      <x>690</x>
+      <y>450</y>
       <w>300</w>
       <h>180</h>
     </coordinates>
@@ -154,8 +154,8 @@ Job.product_id = Product.ID</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>380</x>
-      <y>90</y>
+      <x>410</x>
+      <y>170</y>
       <w>580</w>
       <h>270</h>
     </coordinates>
@@ -168,8 +168,8 @@ ProductData.ID = Product.product_data_id</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>940</x>
-      <y>220</y>
+      <x>970</x>
+      <y>300</y>
       <w>230</w>
       <h>250</h>
     </coordinates>
@@ -178,6 +178,7 @@ ProductData.ID = Product.product_data_id</panel_attributes>
 ID: Integer
 product_data_id: Integer
 state: enum
+done: boolean
 --
 &lt;&lt;PK&gt;&gt; ID
 
