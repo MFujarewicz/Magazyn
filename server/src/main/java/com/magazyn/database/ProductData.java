@@ -63,5 +63,11 @@ public class ProductData {
         this.type = type;
     }
 
+    public Manufacturer getManufacturer() {
+        return manufacturer;
+    }
 
+    public void setManufacturer(Manufacturer manufacturer) {
+        this.manufacturer = manufacturer;
+    }
 }

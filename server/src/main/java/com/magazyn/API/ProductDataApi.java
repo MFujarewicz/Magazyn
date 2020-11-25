@@ -10,8 +10,10 @@ import java.util.Map.Entry;
 import javax.transaction.Transactional;
 
 import com.magazyn.SimpleQuery.ProductsQueryCreator;
+import com.magazyn.database.Manufacturer;
 import com.magazyn.database.ProductData;
 import com.magazyn.database.Type;
+import com.magazyn.database.repositories.ManufacturerRepository;
 import com.magazyn.database.repositories.ProductDataRepository;
 import com.magazyn.database.repositories.TypeRepository;
 
@@ -34,6 +36,8 @@ public class ProductDataApi {
     ProductDataRepository product_data_repository;
     @Autowired
     TypeRepository type_repository;
+    @Autowired
+    ManufacturerRepository manufacturer_repository;
 
     @RequestMapping(value = "/api/product_data/**")
     public String showError() {
@@ -152,9 +156,16 @@ public class ProductDataApi {
             type_data.put("name", product_data.getType().getName());
 
             product_data_json.put("type", type_data);
+
+            JSONObject manufacturer_data = new JSONObject();
+            manufacturer_data.put("ID", product_data.getManufacturer().getId());
+            manufacturer_data.put("name", product_data.getManufacturer().getName());
+
+            product_data_json.put("manufacturer", manufacturer_data);
         }
         else {
             product_data_json.put("type_id", product_data.getType().getId());
+            product_data_json.put("manufacturer_id", product_data.getManufacturer().getId());
         }
 
         return product_data_json;
@@ -165,7 +176,7 @@ public class ProductDataApi {
      */
     private ProductData modifyFomParameters(Map<String, String> params, ProductData product_data, boolean set_all) {
         // boolean for every field!
-        List<Boolean> is_vaid = Arrays.asList(new Boolean[] { false, false, false });
+        List<Boolean> is_vaid = Arrays.asList(new Boolean[] { false, false, false, false });
 
         for (Entry<String, String> param : params.entrySet()) {
             switch (param.getKey()) {
@@ -187,6 +198,16 @@ public class ProductDataApi {
                     Optional<Type> type = type_repository.findById(type_id);
                     product_data.setType(type.get());
                     is_vaid.set(2, true);
+                } catch (Exception exception) {
+                    throw new IllegalRequestException();
+                }
+                    break;
+                case "manufacturer":
+                try {
+                    int manufacturer_id = Integer.parseInt(param.getValue());
+                    Optional<Manufacturer> manufacturer = manufacturer_repository.findById(manufacturer_id);
+                    product_data.setManufacturer(manufacturer.get());
+                    is_vaid.set(3, true);
                 } catch (Exception exception) {
                     throw new IllegalRequestException();
                 }

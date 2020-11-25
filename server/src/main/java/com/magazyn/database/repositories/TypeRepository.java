@@ -1,7 +1,5 @@
 package com.magazyn.database.repositories;
 
-import java.util.TreeMap;
-
 import com.magazyn.database.Type;
 
 import org.springframework.data.jpa.repository.Query;
