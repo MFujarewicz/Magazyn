@@ -69,6 +69,7 @@ type: enum
 product_id: Integer
 assigned: Integer
 data: DateTime
+done: bool
 --
 &lt;&lt;PK&gt;&gt; product_id, type
 
@@ -178,7 +179,6 @@ ProductData.ID = Product.product_data_id</panel_attributes>
 ID: Integer
 product_data_id: Integer
 state: enum
-done: boolean
 --
 &lt;&lt;PK&gt;&gt; ID
 
