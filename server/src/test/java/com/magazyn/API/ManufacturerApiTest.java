@@ -11,8 +11,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 
-import com.magazyn.database.Type;
-import com.magazyn.database.repositories.TypeRepository;
+import com.magazyn.database.Manufacturer;
+import com.magazyn.database.repositories.ManufacturerRepository;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,36 +29,36 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
-public class TypeApiTest {
+public class ManufacturerApiTest {
     @InjectMocks
-    private TypeApi type_api = new TypeApi();
+    private ManufacturerApi manufacturer_api = new ManufacturerApi();
 
     @Mock
-    private TypeRepository type_repository;
+    private ManufacturerRepository manufacturer_repository;
 
     @Captor
-    private ArgumentCaptor<Type> captor;
+    private ArgumentCaptor<Manufacturer> captor;
 
     @Test
     public void getAllTest() throws JSONException {
-        when(type_repository.findAll()).thenReturn(
-            Arrays.asList(new Type[] {})
+        when(manufacturer_repository.findAll()).thenReturn(
+            Arrays.asList(new Manufacturer[] {})
         );
 
-        JSONObject response = new JSONObject(type_api.getAllTypes());
-        JSONArray array = response.getJSONArray("types");
+        JSONObject response = new JSONObject(manufacturer_api.getAllManufacturers());
+        JSONArray array = response.getJSONArray("manufacturers");
         assertEquals(array.length(), 0);
 
-        Type[] types = new Type[2];
-        types[0] = new Type("t1");
-        types[1] = new Type("t2");
+        Manufacturer[] manufacturers = new Manufacturer[2];
+        manufacturers[0] = new Manufacturer("t1");
+        manufacturers[1] = new Manufacturer("t2");
 
-        when(type_repository.findAll()).thenReturn(
-            Arrays.asList(types)
+        when(manufacturer_repository.findAll()).thenReturn(
+            Arrays.asList(manufacturers)
         );
 
-        response = new JSONObject(type_api.getAllTypes());
-        array = response.getJSONArray("types");
+        response = new JSONObject(manufacturer_api.getAllManufacturers());
+        array = response.getJSONArray("manufacturers");
         assertEquals(array.length(), 2);
         JSONObject type_data = array.getJSONObject(0);
         assertTrue(type_data.getString("name").equals("t1") || type_data.getString("name").equals("t2"));
@@ -68,51 +68,51 @@ public class TypeApiTest {
     
     @Test
     public void getByIDTest() throws JSONException {
-        when(type_repository.findById(0)).thenReturn(
-            Optional.of(new Type("t1"))
+        when(manufacturer_repository.findById(0)).thenReturn(
+            Optional.of(new Manufacturer("t1"))
         );
 
-        when(type_repository.findById(1)).thenReturn(
+        when(manufacturer_repository.findById(1)).thenReturn(
             Optional.empty()
         );
 
-        when(type_repository.findById(2)).thenReturn(
-            Optional.of(new Type("t2"))
+        when(manufacturer_repository.findById(2)).thenReturn(
+            Optional.of(new Manufacturer("t2"))
         );
 
-        JSONObject response = new JSONObject(type_api.getTypeById(0));
+        JSONObject response = new JSONObject(manufacturer_api.getManufacturerById(0));
         assertTrue(response.getString("name").equals("t1"));
         
-        assertThrows(NoResourceFoundException.class, () -> { type_api.getTypeById(1); });
+        assertThrows(NoResourceFoundException.class, () -> { manufacturer_api.getManufacturerById(1); });
 
-        response = new JSONObject(type_api.getTypeById(2));
+        response = new JSONObject(manufacturer_api.getManufacturerById(2));
         assertTrue(response.getString("name").equals("t2"));
     }
     
     @Test
     public void getByNameTest() throws JSONException {
-        when(type_repository.findByName("t1")).thenReturn(
-            Arrays.asList(new Type[] {})
+        when(manufacturer_repository.findByName("t1")).thenReturn(
+            Arrays.asList(new Manufacturer[] {})
         );
 
-        Type[] types = new Type[2];
-        types[0] = new Type("t2");
-        types[0].setId(1);
-        types[1] = new Type("t2");
-        types[0].setId(12);
+        Manufacturer[] manufacturers = new Manufacturer[2];
+        manufacturers[0] = new Manufacturer("t2");
+        manufacturers[0].setId(1);
+        manufacturers[1] = new Manufacturer("t2");
+        manufacturers[0].setId(12);
 
-        when(type_repository.findByName("t2")).thenReturn(
-            Arrays.asList(types)
+        when(manufacturer_repository.findByName("t2")).thenReturn(
+            Arrays.asList(manufacturers)
         );
 
-        JSONObject response = new JSONObject(type_api.getTypesByName("t1"));
-        assertEquals(response.getJSONArray("types").length(), 0);
+        JSONObject response = new JSONObject(manufacturer_api.getManufacturersByName("t1"));
+        assertEquals(response.getJSONArray("manufacturers").length(), 0);
 
-        response = new JSONObject(type_api.getTypesByName("t2"));
-        assertEquals(response.getJSONArray("types").length(), 2);
+        response = new JSONObject(manufacturer_api.getManufacturersByName("t2"));
+        assertEquals(response.getJSONArray("manufacturers").length(), 2);
         
-        assertTrue(response.getJSONArray("types").getJSONObject(0).getString("ID").equals("1") || response.getJSONArray("types").getJSONObject(0).getString("ID").equals("12"));
-        assertTrue(response.getJSONArray("types").getJSONObject(0).getString("ID").equals("1") || response.getJSONArray("types").getJSONObject(0).getString("ID").equals("12"));
+        assertTrue(response.getJSONArray("manufacturers").getJSONObject(0).getString("ID").equals("1") || response.getJSONArray("manufacturers").getJSONObject(0).getString("ID").equals("12"));
+        assertTrue(response.getJSONArray("manufacturers").getJSONObject(0).getString("ID").equals("1") || response.getJSONArray("manufacturers").getJSONObject(0).getString("ID").equals("12"));
     }
     
     @Test

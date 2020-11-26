@@ -55,7 +55,7 @@ public class ManufacturerApi {
     }
 
     @GetMapping("/api/manufacturer/id/{id}")
-    public String getManufacturersById(@PathVariable int id) {
+    public String getManufacturerById(@PathVariable int id) {
         Optional<Manufacturer> manufacturer = manufacturer_repository.findById(id);
 
         if (!manufacturer.isPresent()) {

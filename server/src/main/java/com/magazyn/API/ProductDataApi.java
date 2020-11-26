@@ -81,7 +81,10 @@ public class ProductDataApi {
      * @return JSON with requested query
      */
     @GetMapping("/api/product_data/search/{joined}/{query_args}")
+    @ResponseStatus(HttpStatus.I_AM_TEAPOT)
     public String getProductsData(@PathVariable boolean joined, @PathVariable String query_args, @RequestParam Map<String, String> allRequestParams) {
+        return "";
+        //Not yet supported
         query_args = new String(Base64.getUrlDecoder().decode(query_args));
 
         ProductsQueryCreator query;

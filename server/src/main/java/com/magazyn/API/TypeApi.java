@@ -54,7 +54,7 @@ public class TypeApi {
     }
 
     @GetMapping("/api/type/id/{id}")
-    public String getTypesById(@PathVariable int id) {
+    public String getTypeById(@PathVariable int id) {
         Optional<Type> type = type_repository.findById(id);
 
         if (!type.isPresent()) {
