@@ -19,6 +19,8 @@ public class Job {
 
     private Integer assigned;
 
+    private boolean done = false;
+
     private Date date = new Date();
 
     public Job(JobType jobType, Product product, Integer assigned) {
