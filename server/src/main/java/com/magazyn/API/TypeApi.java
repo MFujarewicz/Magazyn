@@ -147,7 +147,7 @@ public class TypeApi {
     @DeleteMapping("/api/type/id/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void delTypeById(@PathVariable int id) {
+    public void delTypeById(@PathVariable int id) { //TODO Check if type is used in ProductData!
         try {
         type_repository.deleteById(id);
         } catch (Exception exception) {

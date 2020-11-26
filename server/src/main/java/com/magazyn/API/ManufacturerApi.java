@@ -148,7 +148,7 @@ public class ManufacturerApi {
     @DeleteMapping("/api/manufacturer/id/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void delManufacturerById(@PathVariable int id) {
+    public void delManufacturerById(@PathVariable int id) {  //TODO Check if manufacturer is used in ProductData!
         try {
         manufacturer_repository.deleteById(id);
         } catch (Exception exception) {

@@ -208,4 +208,9 @@ public class TypeApiTest {
 
         assertThrows(NoResourceFoundException.class, () -> { type_api.delTypeById(0); });
     }
+
+    @Test
+    public void errorTest() {
+        assertThrows(NoEndPointException.class, () -> { type_api.showError(); });
+    }
 }

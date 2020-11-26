@@ -45,7 +45,7 @@ public class ProductDataApi {
     }
 
     @GetMapping("/api/product_data/id/{id}/{joined}")
-    public String getSingleProductsData(@PathVariable int id, @PathVariable boolean joined) {
+    public String getSingleProductData(@PathVariable int id, @PathVariable boolean joined) {
 
         Optional<ProductData> product_data = product_data_repository.findById(id);
                 
@@ -81,10 +81,12 @@ public class ProductDataApi {
      * @return JSON with requested query
      */
     @GetMapping("/api/product_data/search/{joined}/{query_args}")
-    @ResponseStatus(HttpStatus.I_AM_TEAPOT)
+    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
     public String getProductsData(@PathVariable boolean joined, @PathVariable String query_args, @RequestParam Map<String, String> allRequestParams) {
         return "";
         //Not yet supported
+        //TOD
+        /*
         query_args = new String(Base64.getUrlDecoder().decode(query_args));
 
         ProductsQueryCreator query;
@@ -97,6 +99,7 @@ public class ProductDataApi {
         }
 
         return query.fromKeyWords(query_args);
+        */
     }
 
     @PutMapping("/api/product_data/id/{id}")
@@ -119,7 +122,7 @@ public class ProductDataApi {
     @PutMapping("/api/product_data/add/")
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
-    public void addType(@RequestParam Map<String, String> allRequestParams) {
+    public void addProductData(@RequestParam Map<String, String> allRequestParams) {
         ProductData product_data = new ProductData();
 
         product_data = modifyFomParameters(allRequestParams, product_data, true);
@@ -135,7 +138,7 @@ public class ProductDataApi {
     @DeleteMapping("/api/product_data/id/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void delTypesById(@PathVariable int id) {
+    public void delById(@PathVariable int id) {
         try {
         product_data_repository.deleteById(id);
         } catch (Exception exception) {
@@ -223,7 +226,7 @@ public class ProductDataApi {
 
         if (is_vaid.stream().anyMatch(x -> !x) && set_all) {
             // Not all fields are set!
-            throw new IllegalRequestException();
+            return null;
         }
 
         return product_data;

@@ -120,31 +120,31 @@ public class ManufacturerApiTest {
         HashMap<String, String> param = new HashMap<>();
         param.put("name", "t1");
 
-        type_api.addType(param);
+        manufacturer_api.addManufacturer(param);
 
-        verify(type_repository).save(captor.capture());
+        verify(manufacturer_repository).save(captor.capture());
         assertTrue(captor.getValue().getName().equals("t1"));
         
-        Mockito.reset(type_repository);
+        Mockito.reset(manufacturer_repository);
 
         param.put("name", "t2");
         param.put("name", "t3");
         param.put("name", "t5");
         param.put("name", "t4");
 
-        type_api.addType(param);
+        manufacturer_api.addManufacturer(param);
 
-        verify(type_repository).save(captor.capture());
+        verify(manufacturer_repository).save(captor.capture());
         assertTrue(captor.getValue().getName().equals("t1") || captor.getValue().getName().equals("t2") || captor.getValue().getName().equals("t3") || captor.getValue().getName().equals("t4") || captor.getValue().getName().equals("t5"));
 
-        Mockito.reset(type_repository);
+        Mockito.reset(manufacturer_repository);
         param.put("fdfasas", "t5");
 
-        assertThrows(IllegalRequestException.class, () -> { type_api.addType(param); });
+        assertThrows(IllegalRequestException.class, () -> { manufacturer_api.addManufacturer(param); });
 
         param.clear();
 
-        assertThrows(IllegalRequestException.class, () -> { type_api.addType(param); });
+        assertThrows(IllegalRequestException.class, () -> { manufacturer_api.addManufacturer(param); });
     }
     
     @Test
@@ -152,60 +152,65 @@ public class ManufacturerApiTest {
         HashMap<String, String> param = new HashMap<>();
         param.put("name", "t11");
 
-        Type type1 = new Type("t1");
-        type1.setId(1);
+        Manufacturer manufacturer1 = new Manufacturer("t1");
+        manufacturer1.setId(1);
 
-        when(type_repository.findById(1)).thenReturn(
-            Optional.of(type1)
+        when(manufacturer_repository.findById(1)).thenReturn(
+            Optional.of(manufacturer1)
         );
 
-        type_api.setTypeById(1, param);
+        manufacturer_api.setManufacturerById(1, param);
 
-        verify(type_repository).save(captor.capture());
-        verify(type_repository).findById(1);
+        verify(manufacturer_repository).save(captor.capture());
+        verify(manufacturer_repository).findById(1);
         assertTrue(captor.getValue().getName().equals("t11"));
         assertTrue(captor.getValue().getId().equals(1));
         
-        Mockito.reset(type_repository);
+        Mockito.reset(manufacturer_repository);
 
         param.put("name", "t22");
         param.put("name", "t33");
         param.put("name", "t55");
         param.put("name", "t44");
 
-        when(type_repository.findById(1)).thenReturn(
-            Optional.of(type1)
+        when(manufacturer_repository.findById(1)).thenReturn(
+            Optional.of(manufacturer1)
         );
 
-        when(type_repository.findById(2)).thenReturn(
+        when(manufacturer_repository.findById(2)).thenReturn(
             Optional.empty()
         );
 
-        type_api.setTypeById(1, param);
+        manufacturer_api.setManufacturerById(1, param);
 
-        verify(type_repository).save(captor.capture());
-        verify(type_repository).findById(1);
+        verify(manufacturer_repository).save(captor.capture());
+        verify(manufacturer_repository).findById(1);
         assertTrue(captor.getValue().getName().equals("t11") || captor.getValue().getName().equals("t22") || captor.getValue().getName().equals("t33") || captor.getValue().getName().equals("t44") || captor.getValue().getName().equals("t55"));
 
-        assertThrows(NoResourceFoundException.class, () -> { type_api.setTypeById(2, param); });
+        assertThrows(NoResourceFoundException.class, () -> { manufacturer_api.setManufacturerById(2, param); });
 
         param.put("fdfasas", "t5");
 
-        assertThrows(IllegalRequestException.class, () -> { type_api.setTypeById(1, param); });
+        assertThrows(IllegalRequestException.class, () -> { manufacturer_api.setManufacturerById(1, param); });
 
         param.clear();
 
-        assertDoesNotThrow(() -> { type_api.setTypeById(1, param); });
+        assertDoesNotThrow(() -> { manufacturer_api.setManufacturerById(1, param); });
     }
     
     @Test
     public void delTest() {
-        type_api.delTypeById(1);
+        manufacturer_api.delManufacturerById(1);
 
-        verify(type_repository).deleteById(1);
+        verify(manufacturer_repository).deleteById(1);
 
-        Mockito.doThrow(new IllegalArgumentException()).when(type_repository).deleteById(0);
+        Mockito.doThrow(new IllegalArgumentException()).when(manufacturer_repository).deleteById(0);
 
-        assertThrows(NoResourceFoundException.class, () -> { type_api.delTypeById(0); });
+        assertThrows(NoResourceFoundException.class, () -> { manufacturer_api.delManufacturerById(0); });
+    }
+
+    @Test
+    public void errorTest() {
+        assertThrows(NoEndPointException.class, () -> { manufacturer_api.showError(); });
     }
 }
