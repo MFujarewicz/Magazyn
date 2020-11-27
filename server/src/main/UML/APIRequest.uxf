@@ -5,30 +5,50 @@
   <element>
     <type>com.baselet.element.old.allinone.ActivityDiagramText</type>
     <coordinates>
-      <x>40</x>
-      <y>20</y>
-      <w>1124</w>
-      <h>680</h>
+      <x>20</x>
+      <y>0</y>
+      <w>2539</w>
+      <h>1112</h>
     </coordinates>
     <panel_attributes>title:HTTP Request
 Start
 Server gets request
 If
 	[user send invalid request]
-	Generate error
+	Generate error 400
 
 	[user doesn't have required permissions]
-	Generate error
+	Generate error 403
+
+	[user is unauthorized]
+	Generate error 401
 	
 	[user has required permissions]
 	Framework calls maped funcion
-	Check request body
 	If
-		[requset body is valid]
-		Function returns request response 
+		[called funcion does't exist, or is't meant to be called]
+		Generate error 404
+
+		[called funcion is correct]
+		Check request body
+		If
+			[requset body is invalid]
+			Generate error 400
 		
-		[requset body is invalid]
-		Generate error
+			[requset body is valid]
+			Process request
+			If
+				[Requred objects don't exist]
+				Generate error 404
+
+				[Processing this request will result in invalid server state]
+				Generate error 409
+
+				[Processing request is safe]
+				Complete the request
+				Generate response
+
+
 
 Server sends response
 End
