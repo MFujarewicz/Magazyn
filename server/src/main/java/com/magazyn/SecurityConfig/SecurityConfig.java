@@ -19,7 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests(authorizeRequests -> authorizeRequests
         .antMatchers(HttpMethod.GET, "/**").permitAll()
-        .antMatchers("/sec_test").hasRole("user")
+        .antMatchers("/sec_test/**").hasRole("user")
         .anyRequest().authenticated()
         ).oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
 
