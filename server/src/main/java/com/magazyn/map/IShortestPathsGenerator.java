@@ -1,5 +1,19 @@
 package com.magazyn.map;
 
+import java.util.AbstractMap;
+import java.util.HashMap;
+
+import java.awt.Point;
+
 public interface IShortestPathsGenerator {
-    public boolean generate(Map map);
+    /**
+     * @param map
+     * @return null if map is not drew
+     */
+    public HashMap<AbstractMap.SimpleEntry<Point, Point>, Double> generate(Map map);
+
+    /**
+     * @return last error (can be empty if error cannot be described)
+     */
+    public String getLastError();
 }

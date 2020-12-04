@@ -1,5 +1,6 @@
 package com.magazyn.map;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -7,6 +8,8 @@ import java.util.function.Function;
 
 import com.magazyn.map.Map.CenterPoints;
 
+import org.jgrapht.alg.interfaces.AStarAdmissibleHeuristic;
+import org.jgrapht.alg.shortestpath.AStarShortestPath;
 import org.jgrapht.graph.DefaultUndirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
@@ -19,24 +22,44 @@ public class AStarShortestPathsGenerator implements IShortestPathsGenerator {
     private String last_error = "";
 
     @Override
-    public boolean generate(Map map) {
+    public HashMap<AbstractMap.SimpleEntry<Point, Point>, Double> generate(Map map) {
         if (!map.isDrew()) {
-            return false;
+            last_error = "Map is not drew!";
+            return null;
         }
 
         this.map = map;
+        ArrayList<Point> main_points = getMainPoints();
+
+        DefaultUndirectedWeightedGraph<Point, DefaultWeightedEdge> graph;
 
         try {
-            DefaultUndirectedWeightedGraph<Point, DefaultWeightedEdge> graph = generateGraph();
+            graph = generateGraph();
         }
         catch (IllegalArgumentException exception) {
             last_error = exception.getMessage();
-            return false;
+            return null;
         }
 
-        Map.
+        HashMap<AbstractMap.SimpleEntry<Point, Point>, Double> distances = new HashMap<AbstractMap.SimpleEntry<Point, Point>, Double>();
 
-        return true;
+        AStarAdmissibleHeuristic<Point> heuristic = new AStarAdmissibleHeuristic<Point>() {
+            @Override
+            public double getCostEstimate(Point sourceVertex, Point targetVertex) {
+                return Math.sqrt((sourceVertex.x - targetVertex.x) * (sourceVertex.x - targetVertex.x) +
+                                    (sourceVertex.y - targetVertex.y) * (sourceVertex.y - targetVertex.y));
+            }
+        };
+
+        AStarShortestPath<Point, DefaultWeightedEdge> path_finder = new AStarShortestPath<Point, DefaultWeightedEdge>(graph, heuristic);
+
+        for (Point from : main_points) {
+            for (Point to : main_points) {
+                distances.put(new AbstractMap.SimpleEntry<Point, Point>(from, to), path_finder.getPathWeight(from, to));
+            }
+        }
+
+        return distances;
     }
 
     /**
@@ -149,6 +172,11 @@ public class AStarShortestPathsGenerator implements IShortestPathsGenerator {
         int internal_y = (int) ((y / map.getMapSize().heigth) * (map.getMapResolution().heigth));
 
         return new Point(internal_x, internal_y);
+    }
+
+    @Override
+    public String getLastError() {
+        return last_error;
     }
     
 }

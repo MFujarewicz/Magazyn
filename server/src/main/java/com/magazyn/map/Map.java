@@ -1,5 +1,6 @@
 package com.magazyn.map;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,7 +34,7 @@ public class Map {
     private HashMap<IRack, CenterPoints> center_points;
 
     //Map contains only center points and main warehouse points (in internal int cordinates)
-    private HashMap<Point, Point> distance;
+    HashMap<AbstractMap.SimpleEntry<Point, Point>, Double> distances;
 
     //First - pickup place for new products
     //Second - place to pack prducts for shipment
@@ -61,6 +62,7 @@ public class Map {
         this.map_resolution_y = map_resolution_y;
 
         in_out_points = new CenterPoints();
+        distances = new HashMap<AbstractMap.SimpleEntry<Point, Point>, Double>();
     }
 
     public Size getMapSize() {
@@ -146,6 +148,73 @@ public class Map {
         return true;
     }
 
+    public boolean generateDistancesMap(IShortestPathsGenerator generator) {
+        var distances = generator.generate(this);
+
+        if (distances == null) {
+            return false;
+        }
+
+        this.distances = distances;
+        return true;
+    }
+
+    public boolean isPlaceCorrect(IRack rack, int place) {
+        if (place < rack.numberOfAllocationUnitsPerRow() * rack.numberOfRows()) {
+            //First side
+            return true;
+        }
+        else if (rack.isTwoSided() && place < 2 * rack.numberOfAllocationUnitsPerRow() * rack.numberOfRows()) {
+            //Second side
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param rack1
+     * @param place1
+     * @param rack2
+     * @param place2
+     * @return distace beetwen places (-1 id place don't exists)
+     */
+    public double getDistance(IRack rack1, int place1, IRack rack2, int place2) {
+        //Distace between center point end place
+        double approx_1, approx_2;
+        Point from, to;
+
+        if (place1 < rack1.numberOfAllocationUnitsPerRow() * rack1.numberOfRows()) {
+            //First side
+            approx_1 = Math.abs((double)(place1 % rack1.numberOfAllocationUnitsPerRow()) - rack1.numberOfAllocationUnitsPerRow() / 2.0);
+            from = createPoint(center_points.get(rack1).first_x, center_points.get(rack1).first_y);
+        }
+        else if (rack1.isTwoSided() && place1 < 2 * rack1.numberOfAllocationUnitsPerRow() * rack1.numberOfRows()) {
+            //Second side
+            approx_1 = Math.abs((double)(place1 % rack1.numberOfAllocationUnitsPerRow()) - rack1.numberOfAllocationUnitsPerRow() / 2.0);
+            from = createPoint(center_points.get(rack1).second_x, center_points.get(rack1).second_y);
+        }
+        else {
+            return -1.0;
+        }
+
+        if (place2 < rack2.numberOfAllocationUnitsPerRow() * rack2.numberOfRows()) {
+            //First side
+            approx_2 = Math.abs((double)(place2 % rack2.numberOfAllocationUnitsPerRow()) - rack2.numberOfAllocationUnitsPerRow() / 2.0);
+            to = createPoint(center_points.get(rack2).first_x, center_points.get(rack2).first_y);
+        }
+        else if (rack2.isTwoSided() && place2 < 2 * rack2.numberOfAllocationUnitsPerRow() * rack2.numberOfRows()) {
+            //Second side
+            approx_2 = Math.abs((double)(place2 % rack2.numberOfAllocationUnitsPerRow()) - rack2.numberOfAllocationUnitsPerRow() / 2.0);
+            to = createPoint(center_points.get(rack2).second_x, center_points.get(rack2).second_y);
+        }
+        else {
+            return -1.0;
+        }
+
+
+        return -1.0;
+    }
 
     public List<IRack> getRacks() {
         return racks.stream().collect(Collectors.toList());
@@ -163,5 +232,16 @@ public class Map {
         return raw_map;
     }
 
+    /**
+     * @param x coordinate (real)
+     * @param y coordinate (real)
+     * @return coordinates in internal map
+     */
+    public Point createPoint(double x, double y) {
+        int internal_x = (int) ((x / getMapSize().width) * (getMapResolution().width));
+        int internal_y = (int) ((y / getMapSize().heigth) * (getMapResolution().heigth));
+
+        return new Point(internal_x, internal_y);
+    }
 
 }

@@ -3,7 +3,6 @@ package com.magazyn.map;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Optional;
 
 import org.json.JSONArray;
@@ -15,7 +14,6 @@ import org.json.JSONObject;
  */
 public class MapParser {
 	private String path = "";
-	private ArrayList<IRack> rack_list;
 
 	private String last_error = "";
 
@@ -84,8 +82,6 @@ public class MapParser {
 	}
 
 	private boolean exec_impl(String raw_data) {
-		rack_list = new ArrayList<IRack>();
-
 		JSONObject data = new JSONObject(raw_data);
 
 		int size_x = data.getInt("size_x");
