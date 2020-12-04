@@ -55,7 +55,7 @@ public class SecurityInfo {
         return message.toString();
     }
 
-    @Secured("ROLE_manager")
+    //@Secured("ROLE_manager")
     @GetMapping("sec_test/aaa")
     String test3() {
         JSONObject message = new JSONObject();
