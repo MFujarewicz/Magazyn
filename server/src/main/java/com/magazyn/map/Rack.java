@@ -1,17 +1,15 @@
 package com.magazyn.map;
 
-import java.util.UUID;
-
 public class Rack implements IRack {
-	private UUID rack_uuid;
+	private int rack_id;
 	private Rectangle bounds = new Rectangle();
 
 	private boolean is_two_sided = false;
 	private long number_of_allocation_units_per_row = 0;
 	private long number_of_rows = 0;
 
-	public Rack(UUID rack_uuid) {
-		this.rack_uuid = rack_uuid;
+	public Rack(int rack_id) {
+		this.rack_id = rack_id;
 	}
 
 	public void setBounds(Rectangle bounds) {
@@ -36,8 +34,8 @@ public class Rack implements IRack {
 	}
 
 	@Override
-	public UUID getObjectUUID() {
-		return rack_uuid;
+	public int getObjectID() {
+		return rack_id;
 	}
 
 	@Override
@@ -57,10 +55,7 @@ public class Rack implements IRack {
 
 	@Override
 	public int hashCode() {
-		long hash = rack_uuid.getLeastSignificantBits();
-		hash ^= rack_uuid.getMostSignificantBits() + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-
-		return Long.hashCode(hash);
+		return Integer.hashCode(rack_id);
 	}
 	
 }

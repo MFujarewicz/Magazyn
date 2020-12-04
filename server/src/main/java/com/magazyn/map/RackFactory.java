@@ -1,7 +1,5 @@
 package com.magazyn.map;
 
-import java.util.UUID;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,8 +13,8 @@ public class RackFactory implements IRackFactory {
                 return null;
             }
 
-            String uuid = rack_data.getString("UUID");
-            Rack rack = new Rack(UUID.fromString(uuid));
+            int id = rack_data.getInt("ID");
+            Rack rack = new Rack(id);
 
             rack.twoSided(rack_data.getBoolean("two_sided"));
             rack.setNumberOfAllocationUnitsPerRow(rack_data.getLong("alloc_unit"));
@@ -28,7 +26,7 @@ public class RackFactory implements IRackFactory {
             bounds.setTop(bounds_data.getDouble(1));
             bounds.setWidth(bounds_data.getDouble(2));
             bounds.setHeight(bounds_data.getDouble(3));
-            bounds.setAngle(bounds_data.getDouble(4));
+            bounds.setAngleFromDegree(bounds_data.getDouble(4));
 
             rack.setBounds(bounds);
 
@@ -36,7 +34,7 @@ public class RackFactory implements IRackFactory {
 
         } catch (JSONException exception) {
             return null;
-        } catch (IllegalArgumentException exception) { // from UUID.fromString
+        } catch (IllegalArgumentException exception) { // from Integer.parseInt
             return null;
         }
     }

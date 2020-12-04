@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 public class RectangleTest {
 	private double eps = 0.00001;
 
@@ -140,5 +138,18 @@ public class RectangleTest {
 		rect.setAngle(array[4]);
 
 		assertEquals(rect2, rect);
+	}
+
+	@Test
+	public void angleTest() {
+		Rectangle rect = new Rectangle(1.0, 2.0, 3.0, 4.0, 1.0);
+
+		rect.setAngleFromDegree(180);
+
+		assertTrue(Math.abs(Math.PI - rect.getAngle()) < 0.001);
+
+		rect.setAngleFromDegree(90);
+
+		assertTrue(Math.abs(Math.PI / 2.0 - rect.getAngle()) < 0.001);
 	}
 }

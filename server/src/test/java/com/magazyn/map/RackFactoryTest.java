@@ -3,8 +3,6 @@ package com.magazyn.map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import java.util.UUID;
-
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +13,7 @@ public class RackFactoryTest {
 
     @BeforeEach
     public void setup() {
-        valid_rack = new Rack(UUID.fromString("64e94d56-93e4-4713-8923-2e0b3565082c"));
+        valid_rack = new Rack(64);
         valid_rack.setBounds(new Rectangle(1.0, 1.0, 1.0, 1.0, 1.0));
 
         valid_rack.twoSided(true);
@@ -28,7 +26,7 @@ public class RackFactoryTest {
 
         data.put("type", "rack");
 
-        data.put("UUID", valid_rack.getObjectUUID().toString());
+        data.put("ID", valid_rack.getObjectID());
         data.put("bounds", valid_rack.getBounds().toArray());
 
         data.put("two_sided", valid_rack.isTwoSided());

@@ -72,6 +72,10 @@ public class Rectangle {
 		this.angle = angle;
 	}
 
+	void setAngleFromDegree(double angle) {
+		setAngle(angle / 180.0 * Math.PI);
+	}
+
 	double calculateArea() {
 		if (height < 0 || width < 0) {
 			return -1.0;
