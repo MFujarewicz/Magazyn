@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 
+import com.magazyn.API.exceptions.IllegalRequestException;
+import com.magazyn.API.exceptions.NoEndPointException;
+import com.magazyn.API.exceptions.NoResourceFoundException;
 import com.magazyn.database.Manufacturer;
 import com.magazyn.database.repositories.ManufacturerRepository;
 

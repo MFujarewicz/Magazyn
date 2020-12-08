@@ -6,6 +6,9 @@ import java.util.Optional;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.magazyn.API.exceptions.IllegalRequestException;
+import com.magazyn.API.exceptions.NoEndPointException;
+import com.magazyn.API.exceptions.NoResourceFoundException;
 import com.magazyn.database.Type;
 import com.magazyn.database.repositories.TypeRepository;
 

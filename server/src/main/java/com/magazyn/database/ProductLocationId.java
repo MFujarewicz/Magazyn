@@ -10,7 +10,7 @@ public class ProductLocationId implements Serializable {
 
     public ProductLocationId(Integer ID_rack, Integer rack_placement) {
         this.ID_rack = ID_rack;
-        Rack_placement = rack_placement;
+        this.Rack_placement = rack_placement;
     }
 
     //TODO hashCODE() equals()

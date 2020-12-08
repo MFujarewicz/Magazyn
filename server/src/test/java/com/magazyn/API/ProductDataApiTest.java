@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 
+import com.magazyn.API.exceptions.IllegalRequestException;
+import com.magazyn.API.exceptions.NoEndPointException;
+import com.magazyn.API.exceptions.NoResourceFoundException;
 import com.magazyn.database.Manufacturer;
 import com.magazyn.database.ProductData;
 import com.magazyn.database.Type;
@@ -210,7 +213,7 @@ public class ProductDataApiTest {
         param.put("name", "bbb");
         param.put("type", "0");
 
-        assertThrows(IllegalRequestException.class, () -> {product_data_api.setTypeById(1, param); });
+        assertThrows(NoResourceFoundException.class, () -> {product_data_api.setTypeById(1, param); });
 
         param.clear();
         param.put("weight", "333.33");
@@ -230,7 +233,7 @@ public class ProductDataApiTest {
         param.clear();
         param.put("manufacturer", "5");
 
-        assertThrows(IllegalRequestException.class, () -> { product_data_api.setTypeById(1, param); });
+        assertThrows(NoResourceFoundException.class, () -> { product_data_api.setTypeById(1, param); });
 
         param.clear();
         param.put("weight", "abc");
@@ -240,7 +243,7 @@ public class ProductDataApiTest {
     }
 
     @Test
-    public void addTest() throws JSONException
+    public void addTest()
     {
         when(product_data_repository.findById(0)).thenReturn(
             Optional.empty()

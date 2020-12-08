@@ -1,15 +1,13 @@
 package com.magazyn.API;
 
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.Map.Entry;
 
 import javax.transaction.Transactional;
 
-import com.magazyn.SimpleQuery.ProductsQueryCreator;
+import com.magazyn.API.exceptions.IllegalRequestException;
+import com.magazyn.API.exceptions.NoEndPointException;
+import com.magazyn.API.exceptions.NoResourceFoundException;
 import com.magazyn.database.Manufacturer;
 import com.magazyn.database.ProductData;
 import com.magazyn.database.Type;
@@ -48,7 +46,7 @@ public class ProductDataApi {
     public String getSingleProductData(@PathVariable int id, @PathVariable boolean joined) {
 
         Optional<ProductData> product_data = product_data_repository.findById(id);
-                
+
         if (!product_data.isPresent()) {
             throw new NoResourceFoundException();
         }
@@ -75,8 +73,8 @@ public class ProductDataApi {
     }
 
     /**
-     * @param connect Join product data with connected properties (type, manufactirer, ...)
-     * @param query_args Base64 URL safe encoded key word for search query "word1,word2,..."
+     * @param connect          Join product data with connected properties (type, manufactirer, ...)
+     * @param query_args       Base64 URL safe encoded key word for search query "word1,word2,..."
      * @param allRequestParams Parameters for search query
      * @return JSON with requested query
      */
@@ -118,7 +116,7 @@ public class ProductDataApi {
 
         product_data_repository.save(product_data);
     }
-    
+
     @PutMapping("/api/product_data/add/")
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
@@ -140,7 +138,7 @@ public class ProductDataApi {
     @Transactional
     public void delById(@PathVariable int id) {
         try {
-        product_data_repository.deleteById(id);
+            product_data_repository.deleteById(id);
         } catch (Exception exception) {
             throw new NoResourceFoundException();
         }
@@ -168,8 +166,7 @@ public class ProductDataApi {
             manufacturer_data.put("name", product_data.getManufacturer().getName());
 
             product_data_json.put("manufacturer", manufacturer_data);
-        }
-        else {
+        } else {
             product_data_json.put("type_id", product_data.getType().getId());
             product_data_json.put("manufacturer_id", product_data.getManufacturer().getId());
         }
@@ -182,41 +179,47 @@ public class ProductDataApi {
      */
     private ProductData modifyFomParameters(Map<String, String> params, ProductData product_data, boolean set_all) {
         // boolean for every field!
-        List<Boolean> is_vaid = Arrays.asList(new Boolean[] { false, false, false, false });
+        List<Boolean> is_vaid = Arrays.asList(new Boolean[]{false, false, false, false});
 
         for (Entry<String, String> param : params.entrySet()) {
             switch (param.getKey()) {
                 case "name":
-                product_data.setName(param.getValue());
+                    product_data.setName(param.getValue());
                     is_vaid.set(0, true);
                     break;
                 case "weight":
-                try {
-                    product_data.setWeight(Double.parseDouble(param.getValue()));
-                    is_vaid.set(1, true);
-                } catch (Exception exception) {
-                    throw new IllegalRequestException();
-                }
+                    try {
+                        product_data.setWeight(Double.parseDouble(param.getValue()));
+                        is_vaid.set(1, true);
+                    } catch (NumberFormatException ex) {
+                        throw new IllegalRequestException();
+                    } catch (NoSuchElementException ex) {
+                        throw new NoResourceFoundException();
+                    }
                     break;
                 case "type":
-                try {
-                    int type_id = Integer.parseInt(param.getValue());
-                    Optional<Type> type = type_repository.findById(type_id);
-                    product_data.setType(type.get());
-                    is_vaid.set(2, true);
-                } catch (Exception exception) {
-                    throw new IllegalRequestException();
-                }
+                    try {
+                        int type_id = Integer.parseInt(param.getValue());
+                        Optional<Type> type = type_repository.findById(type_id);
+                        product_data.setType(type.get());
+                        is_vaid.set(2, true);
+                    } catch (NumberFormatException ex) {
+                        throw new IllegalRequestException();
+                    } catch (NoSuchElementException ex) {
+                        throw new NoResourceFoundException();
+                    }
                     break;
                 case "manufacturer":
-                try {
-                    int manufacturer_id = Integer.parseInt(param.getValue());
-                    Optional<Manufacturer> manufacturer = manufacturer_repository.findById(manufacturer_id);
-                    product_data.setManufacturer(manufacturer.get());
-                    is_vaid.set(3, true);
-                } catch (Exception exception) {
-                    throw new IllegalRequestException();
-                }
+                    try {
+                        int manufacturer_id = Integer.parseInt(param.getValue());
+                        Optional<Manufacturer> manufacturer = manufacturer_repository.findById(manufacturer_id);
+                        product_data.setManufacturer(manufacturer.get());
+                        is_vaid.set(3, true);
+                    } catch (NumberFormatException ex) {
+                        throw new IllegalRequestException();
+                    } catch (NoSuchElementException ex) {
+                        throw new NoResourceFoundException();
+                    }
                     break;
 
                 default:

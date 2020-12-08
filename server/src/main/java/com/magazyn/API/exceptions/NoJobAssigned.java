@@ -1,14 +1,11 @@
-package com.magazyn.API;
+package com.magazyn.API.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class NoEndPointException extends RuntimeException{
-
+public class NoJobAssigned extends RuntimeException {
     /**
      *
      */
-    private static final long serialVersionUID = 7710234606118823470L;
-    
 }
