@@ -1,6 +1,7 @@
 package com.magazyn.map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -151,5 +152,19 @@ public class RectangleTest {
 		rect.setAngleFromDegree(90);
 
 		assertTrue(Math.abs(Math.PI / 2.0 - rect.getAngle()) < 0.001);
+	}
+
+	@Test
+	public void equalTest() {
+		Rectangle rect1 = new Rectangle(1.0, 2.0, 3.0, 4.0, 1.0);
+		Rectangle rect2 = new Rectangle(1.0, 2.0, 3.0, 4.0, 1.0);
+		Rectangle rect3 = new Rectangle(1.0, 2.0, 3.0, 4.0, 3.0);
+		Rectangle rect4 = null;
+		Double d1 = 4.0;
+
+		assertTrue(rect1.equals(rect2));
+		assertFalse(rect1.equals(rect3));
+		assertFalse(rect1.equals(rect4));
+		assertFalse(rect1.equals(d1));
 	}
 }

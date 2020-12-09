@@ -34,8 +34,6 @@ public class RackFactory implements IRackFactory {
 
         } catch (JSONException exception) {
             return null;
-        } catch (IllegalArgumentException exception) { // from Integer.parseInt
-            return null;
         }
     }
 }

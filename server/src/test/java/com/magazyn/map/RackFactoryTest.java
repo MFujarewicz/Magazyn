@@ -48,4 +48,27 @@ public class RackFactoryTest {
         assertEquals(valid_rack.numberOfRows(), rack.numberOfRows());
         assertEquals(valid_rack.isTwoSided(), rack.isTwoSided());
     }
+
+    @Test
+    public void test2() {
+        String data = getValidData();
+        JSONObject j_data = new JSONObject(data);
+        j_data.put("type", "aaa");
+
+        Rack rack = new RackFactory().createRack(j_data);
+
+        assertEquals(rack, null);
+    }
+
+    @Test
+    public void test3() {
+        String data = getValidData();
+        JSONObject j_data = new JSONObject(data);
+        j_data.put("ID", "aaa");
+
+        Rack rack = new RackFactory().createRack(j_data);
+
+        assertEquals(rack, null);
+    }
+
 }

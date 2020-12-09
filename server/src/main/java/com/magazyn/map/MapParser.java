@@ -29,7 +29,7 @@ public class MapParser {
 	public boolean isFileGood() {
 		try {
 			FileInputStream in = new FileInputStream(path);
-			String raw_data = in.readAllBytes().toString();
+			String raw_data = new String(in.readAllBytes(),  StandardCharsets.UTF_8);
 			in.close();
 
 			new JSONObject(raw_data);
@@ -58,8 +58,7 @@ public class MapParser {
 
 			return exec(raw_data);
 		} catch (IOException exception) {
-			return false;
-		} catch (JSONException exception) {
+			last_error = "Invalid input file!";
 			return false;
 		}
 	}

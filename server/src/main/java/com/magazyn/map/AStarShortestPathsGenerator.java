@@ -19,6 +19,9 @@ import java.awt.Point;
 public class AStarShortestPathsGenerator implements IShortestPathsGenerator {
     private Map map;
 
+    private double scale_x;
+    private double scale_y;
+
     private String last_error = "";
 
     @Override
@@ -29,6 +32,10 @@ public class AStarShortestPathsGenerator implements IShortestPathsGenerator {
         }
 
         this.map = map;
+
+        scale_x = (double)map.getMapSize().width / (double)map.getMapResolution().width;
+        scale_y = (double)map.getMapSize().heigth / (double)map.getMapResolution().heigth;
+
         ArrayList<Point> main_points = getMainPoints();
 
         DefaultUndirectedWeightedGraph<Point, DefaultWeightedEdge> graph;
@@ -46,8 +53,8 @@ public class AStarShortestPathsGenerator implements IShortestPathsGenerator {
         AStarAdmissibleHeuristic<Point> heuristic = new AStarAdmissibleHeuristic<Point>() {
             @Override
             public double getCostEstimate(Point sourceVertex, Point targetVertex) {
-                return Math.sqrt((sourceVertex.x - targetVertex.x) * (sourceVertex.x - targetVertex.x) +
-                                    (sourceVertex.y - targetVertex.y) * (sourceVertex.y - targetVertex.y));
+                return Math.sqrt((sourceVertex.x - targetVertex.x) * (sourceVertex.x - targetVertex.x) * scale_x * scale_x +
+                                    (sourceVertex.y - targetVertex.y) * (sourceVertex.y - targetVertex.y) * scale_y * scale_y);
             }
         };
 
@@ -110,7 +117,7 @@ public class AStarShortestPathsGenerator implements IShortestPathsGenerator {
         ArrayList<Point> main_points = getMainPoints();
 
         //Add main points
-        //And connrect main points to outside cells (id = 0, empty)
+        //And connect main points to outside cells (id = 0, empty)
         for (Point point : main_points) {
             graph.addVertex(point);
             boolean connected = false;
@@ -121,13 +128,15 @@ public class AStarShortestPathsGenerator implements IShortestPathsGenerator {
                     if (raw_map.get(XY_to_index.apply(new Point(local_x, local_y))) == 0) {
                         var edge = graph.addEdge(point, new Point(local_x, local_y));
 
-                        //Pow(local_x - point.x, 2) is not needed, becouse local_x - point.x will be -1, 0 or 1
-                        graph.setEdgeWeight(edge, Math.sqrt(Math.abs(local_x - point.x) + Math.abs(local_y - point.y))); 
+                        graph.setEdgeWeight(edge, 
+                            Math.sqrt(Math.pow((local_x - point.x) * scale_x, 2.0) 
+                            + Math.pow((local_y - point.y) * scale_y, 2.0))); 
                         connected = true;
                     }
                 }
             }
 
+            //That error means MapDrawer is broken!!
             if (!connected) {
                 throw new IllegalArgumentException("Illegal data! Cannot build graph!");
             }
@@ -149,8 +158,9 @@ public class AStarShortestPathsGenerator implements IShortestPathsGenerator {
                                     continue;
                                 }
 
-                                //Pow(local_x - point.x, 2) is not needed, becouse local_x - point.x will be -1, 0 or 1
-                                graph.setEdgeWeight(edge, Math.sqrt(Math.abs(local_x - x) + Math.abs(local_y - y))); 
+                                graph.setEdgeWeight(edge, 
+                                    Math.sqrt(Math.pow((local_x - x) * scale_x, 2.0) 
+                                    + Math.pow((local_y - y) * scale_y, 2.0))); 
                             }
                         }
                     }

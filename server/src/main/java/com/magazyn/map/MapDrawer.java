@@ -197,6 +197,7 @@ public class MapDrawer {
                 }
             }
 
+            //Only for safety, should't happen
             if (on_border) {
                 colour_changes++;
             }
@@ -217,6 +218,7 @@ public class MapDrawer {
                                 if (!finished) {
                                     paint = true;
                                 } else {
+                                	//Only for safety, should't happen
                                     throw new IllegalArgumentException("Algorithm returned invalid result!");
                                 }
                             }
@@ -235,6 +237,7 @@ public class MapDrawer {
                     }
                 }
             } else if (colour_changes > 4) {
+            	//Only for safety, should't happen
                 throw new IllegalArgumentException("Algorithm returned invalid result!");
             }
         }
@@ -251,7 +254,7 @@ public class MapDrawer {
     }
 
     /**
-     * throws IllegalArgumentException if map is incorect (collision detected)
+     * throws IllegalArgumentException if map is incorrect (collision detected)
      */
     private void checkMap() {
         Function<Point, Boolean> in_bounds = (Point point) -> {
@@ -264,8 +267,8 @@ public class MapDrawer {
 
         Point curr_point = new Point(0, 0);
 
-        for (; curr_point.x < map.getMapResolution().width; curr_point.x++) {
-            for (; curr_point.y < map.getMapResolution().heigth; curr_point.y++) {
+        for (; curr_point.y < map.getMapResolution().heigth; curr_point.y++) {
+            for (; curr_point.x < map.getMapResolution().width; curr_point.x++) {
                 if (raw_map.get(XY_to_index.apply(curr_point)) != 0) {
                     var rack_id = raw_map.get(XY_to_index.apply(curr_point));
 
@@ -287,6 +290,8 @@ public class MapDrawer {
                 }
 
             }
+
+            curr_point.x = 0;
         }
 
         //Check collision with warehouse points
@@ -307,8 +312,8 @@ public class MapDrawer {
         }
 
         //OUT
-        x = (int) ((map.getMainWarehousePoints().first_x / map.getMapSize().width) * (map.getMapResolution().width));
-        y = (int) ((map.getMainWarehousePoints().first_y / map.getMapSize().heigth) * (map.getMapResolution().heigth));
+        x = (int) ((map.getMainWarehousePoints().second_x / map.getMapSize().width) * (map.getMapResolution().width));
+        y = (int) ((map.getMainWarehousePoints().second_y / map.getMapSize().heigth) * (map.getMapResolution().heigth));
 
         // Check 3x3 box
         for (int local_x = x - 1; local_x <= x + 1; local_x++) {

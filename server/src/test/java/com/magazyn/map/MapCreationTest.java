@@ -16,7 +16,7 @@ public class MapCreationTest {
 
     @Test
     public void test1() {
-        String data = "{\"size_x\":38,\"size_y\":20,\"res_x\":152,\"res_y\":80,\"map\":[{\"type\":\"rack\",\"ID\":1,\"two_sided\":true,\"alloc_unit\":20,\"rows\":5,\"bounds\":[2,3,10,2,0]},{\"type\":\"rack\",\"ID\":2,\"two_sided\":true,\"alloc_unit\":20,\"rows\":5,\"bounds\":[12,8,8.485281374238,2.828427124746,135]}]}";
+        String data = "{\"main_1_x\":1,\"main_1_y\":5,\"main_2_x\":1,\"main_2_y\":15,\"size_x\":38,\"size_y\":20,\"res_x\":152,\"res_y\":80,\"map\":[{\"type\":\"rack\",\"ID\":1,\"two_sided\":true,\"alloc_unit\":20,\"rows\":5,\"bounds\":[2,3,10,2,0]},{\"type\":\"rack\",\"ID\":2,\"two_sided\":true,\"alloc_unit\":20,\"rows\":5,\"bounds\":[12,8,8.485281374238,2.828427124746,135]}]}";
 
         MapParser map_praser = new MapParser();
         
@@ -54,6 +54,7 @@ public class MapCreationTest {
         assertTrue(Math.abs(13.0 - map.getCenterPoints().get(rack2).second_y) < 0.001);
 
         MapDrawer map_drawer = new MapDrawer(map);
+        map_drawer.createMapImage();
     }
 
     @Test
@@ -77,6 +78,6 @@ public class MapCreationTest {
         }
 
         AStarShortestPathsGenerator generator = new AStarShortestPathsGenerator();
-        assertTrue(generator.generate(map));
+        assertTrue(map.generateDistancesMap(generator));
     }
 }
