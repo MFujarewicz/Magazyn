@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.baselet.element.old.allinone.ActivityDiagramText</type>
+    <coordinates>
+      <x>0</x>
+      <y>0</y>
+      <w>1178</w>
+      <h>1488</h>
+    </coordinates>
+    <panel_attributes>title:Server Startup
+Start
+
+If
+	[map file is not present]
+	Generate error message
+	Abort server start
+	
+	[map file is present]
+	Read map file
+	If
+		[map cannot be loaded]
+		Generate error message
+		Abort server start
+
+		[map is loaded]
+		Check if the same map was loaded previously
+		If
+			[Yes]
+			Load saved data
+
+			[No]
+			Run map validation
+			If
+				[map is not valid]
+				Generate error message
+				Abort server start
+
+				[map is valid]
+				Create map
+				Draw map
+				Calculate shortest distances
+				Save map
+
+Hand over server \ control to Spring
+[Spring initializes Beans]
+Check integrity of storage database
+If
+	[Database contains invalid data]
+	Abort server start
+
+	[Database contains valid data]
+	Continue server start
+	
+End
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

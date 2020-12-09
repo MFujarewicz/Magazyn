@@ -1,0 +1,10 @@
+.App {
+  text-align: center;
+  display: flex;
+}
+
+.Menu {
+  display: flex;
+  align-items: left;
+  width: auto;
+}

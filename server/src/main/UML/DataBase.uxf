@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <help_text>Space for diagram notes</help_text>
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>210</x>
+      <y>140</y>
+      <w>210</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>ProductData
+--
+ID: Integer
+name: String
+weight: Double
+ID_type: Integer
+ID_manufacturer: Integer
+--
+&lt;&lt;PK&gt;&gt; ID
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>70</x>
+      <y>470</y>
+      <w>210</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Manufacturer
+--
+ID: Integer
+name: String
+--
+&lt;&lt;PK&gt;&gt; ID
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>320</x>
+      <y>470</y>
+      <w>210</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Type
+--
+ID: Integer
+name: String
+--
+&lt;&lt;PK&gt;&gt; ID</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>670</x>
+      <y>610</y>
+      <w>210</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>Job
+--
+type: enum
+product_id: Integer
+assigned: Integer
+data: DateTime
+done: bool
+--
+&lt;&lt;PK&gt;&gt; product_id, type
+
+type: enum[
+/take_in/
+/take_out/
+]</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>90</x>
+      <y>230</y>
+      <w>300</w>
+      <h>260</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*
+Product.ID_manufacturer = Manufacturer.ID</panel_attributes>
+    <additional_attributes>10.0;240.0;10.0;10.0;120.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>410</x>
+      <y>230</y>
+      <w>240</w>
+      <h>260</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*
+Product.ID_type = Type.ID</panel_attributes>
+    <additional_attributes>60.0;240.0;60.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>770</x>
+      <y>80</y>
+      <w>230</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>ProductLocation
+--
+product_id: Integer
+ID_rack: Integer
+Rack_placement: Integer
+--
+&lt;&lt;PK&gt;&gt; ID_rack, Rack_placement</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>820</x>
+      <y>200</y>
+      <w>280</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1
+ProductLocation.product_id = Product.ID</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;130.0;150.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>690</x>
+      <y>450</y>
+      <w>300</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1, 2
+m2=1
+Job.product_id = Product.ID</panel_attributes>
+    <additional_attributes>10.0;160.0;10.0;10.0;280.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>410</x>
+      <y>170</y>
+      <w>580</w>
+      <h>270</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*
+ProductData.ID = Product.product_data_id</panel_attributes>
+    <additional_attributes>10.0;10.0;140.0;10.0;140.0;110.0;310.0;110.0;310.0;240.0;560.0;240.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>970</x>
+      <y>300</y>
+      <w>230</w>
+      <h>250</h>
+    </coordinates>
+    <panel_attributes>Product
+--
+ID: Integer
+product_data_id: Integer
+state: enum
+--
+&lt;&lt;PK&gt;&gt; ID
+
+type: enum[
+/to_be_stored/
+/in_storage/
+/to_be_taken/
+/done/
+]
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
