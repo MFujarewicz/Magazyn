@@ -1,4 +1,4 @@
-package com.magazyn.map;
+package com.magazyn.Map;
 
 public class Rack implements IRack {
 	private int rack_id;

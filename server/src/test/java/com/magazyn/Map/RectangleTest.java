@@ -1,4 +1,4 @@
-package com.magazyn.map;
+package com.magazyn.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -155,6 +155,7 @@ public class RectangleTest {
 	}
 
 	@Test
+	@SuppressWarnings("all")
 	public void equalTest() {
 		Rectangle rect1 = new Rectangle(1.0, 2.0, 3.0, 4.0, 1.0);
 		Rectangle rect2 = new Rectangle(1.0, 2.0, 3.0, 4.0, 1.0);

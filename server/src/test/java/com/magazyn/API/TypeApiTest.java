@@ -111,8 +111,8 @@ public class TypeApiTest {
         response = new JSONObject(type_api.getTypesByName("t2"));
         assertEquals(response.getJSONArray("types").length(), 2);
         
-        assertTrue(response.getJSONArray("types").getJSONObject(0).getString("ID").equals("1") || response.getJSONArray("types").getJSONObject(0).getString("ID").equals("12"));
-        assertTrue(response.getJSONArray("types").getJSONObject(0).getString("ID").equals("1") || response.getJSONArray("types").getJSONObject(0).getString("ID").equals("12"));
+        assertTrue(response.getJSONArray("types").getJSONObject(0).getInt("ID") == 1 || response.getJSONArray("types").getJSONObject(0).getInt("ID") == 12);
+        assertTrue(response.getJSONArray("types").getJSONObject(0).getInt("ID") == 1 || response.getJSONArray("types").getJSONObject(0).getInt("ID") == 12);
     }
     
     @Test

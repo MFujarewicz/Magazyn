@@ -1,4 +1,4 @@
-package com.magazyn.map;
+package com.magazyn.Map;
 
 import java.awt.geom.Point2D;
 import java.awt.Graphics2D;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
-import com.magazyn.map.Map.CenterPoints;
+import com.magazyn.Map.Map.CenterPoints;
 
 public class MapDrawer {
     private Map map;

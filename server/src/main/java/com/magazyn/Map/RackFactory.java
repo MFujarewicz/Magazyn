@@ -1,4 +1,4 @@
-package com.magazyn.map;
+package com.magazyn.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;

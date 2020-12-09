@@ -1,8 +1,9 @@
-package com.magazyn.map;
+package com.magazyn.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ public class RackFactoryTest {
         valid_rack.setNumberOfRows(3);
     }
 
-    private String getValidData() {
+    private String getValidData() throws JSONException {
         JSONObject data = new JSONObject();
 
         data.put("type", "rack");
@@ -37,7 +38,7 @@ public class RackFactoryTest {
     }
 
     @Test
-    public void test1() {
+    public void test1() throws JSONException {
         String data = getValidData();
 
         Rack rack = new RackFactory().createRack(new JSONObject(data));
@@ -50,7 +51,7 @@ public class RackFactoryTest {
     }
 
     @Test
-    public void test2() {
+    public void test2() throws JSONException {
         String data = getValidData();
         JSONObject j_data = new JSONObject(data);
         j_data.put("type", "aaa");
@@ -61,7 +62,7 @@ public class RackFactoryTest {
     }
 
     @Test
-    public void test3() {
+    public void test3() throws JSONException {
         String data = getValidData();
         JSONObject j_data = new JSONObject(data);
         j_data.put("ID", "aaa");

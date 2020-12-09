@@ -1,4 +1,4 @@
-package com.magazyn.map;
+package com.magazyn.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -59,7 +59,7 @@ public class MapCreationTest {
 
     @Test
     public void test2() {
-        String file_path = "src/test/resources/map/test_map.json";
+        String file_path = "src/test/resources/Map/test_map.json";
 
         MapParser map_praser = new MapParser(file_path);
         assertTrue(map_praser.exec());

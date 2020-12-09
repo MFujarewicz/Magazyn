@@ -1,4 +1,4 @@
-package com.magazyn.map;
+package com.magazyn.Map;
 
 import java.io.FileInputStream;
 import java.io.IOException;

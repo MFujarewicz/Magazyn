@@ -1,4 +1,4 @@
-package com.magazyn.map;
+package com.magazyn.Map;
 
 public interface IRack extends IMapObject{
 	public boolean isTwoSided();
