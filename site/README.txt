@@ -4,6 +4,8 @@ Valid Redirect URIs: *
 Web Origins: *
 (oba ustawiamy na gwiazdkę)
 
+Aby móc się zalogować należy w Keycloak utworzyć użytkownika i ustwić mu hasło
+
 Potrzebne zainstalowane są:
 Node.js: https://nodejs.org/en/
 Yarn: https://classic.yarnpkg.com/en/docs/install
