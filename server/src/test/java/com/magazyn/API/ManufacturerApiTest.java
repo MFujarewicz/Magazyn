@@ -114,8 +114,8 @@ public class ManufacturerApiTest {
         response = new JSONObject(manufacturer_api.getManufacturersByName("t2"));
         assertEquals(response.getJSONArray("manufacturers").length(), 2);
         
-        assertTrue(response.getJSONArray("manufacturers").getJSONObject(0).getString("ID").equals("1") || response.getJSONArray("manufacturers").getJSONObject(0).getString("ID").equals("12"));
-        assertTrue(response.getJSONArray("manufacturers").getJSONObject(0).getString("ID").equals("1") || response.getJSONArray("manufacturers").getJSONObject(0).getString("ID").equals("12"));
+        assertTrue(response.getJSONArray("manufacturers").getJSONObject(0).getInt("ID") == 1 || response.getJSONArray("manufacturers").getJSONObject(0).getInt("ID") == 12);
+        assertTrue(response.getJSONArray("manufacturers").getJSONObject(0).getInt("ID") == 1 || response.getJSONArray("manufacturers").getJSONObject(0).getInt("ID") == 12);
     }
     
     @Test

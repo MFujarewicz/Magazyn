@@ -8,6 +8,7 @@ import java.util.List;
 @Entity
 public class Product {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer ID;
 
     @ManyToOne
