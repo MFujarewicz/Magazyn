@@ -1,5 +1,6 @@
 package com.magazyn.API;
 
+import com.magazyn.API.exceptions.NoJobAssigned;
 import com.magazyn.JobType;
 import com.magazyn.database.Job;
 import com.magazyn.database.Product;
@@ -51,14 +52,7 @@ public class JobApiTest {
 
     @Test
     public void getProductsByAssignedTest() throws JSONException {
-        when(jobRepository.findAllByAssigned(1)).thenReturn(
-                new ArrayList<Job>()
-        );
-
-        JSONObject response = new JSONObject(jobApi.getProductsByAssigned(1));
-        assertEquals(0, response.getJSONArray("job").length());
-
-        Mockito.reset(jobRepository);
+        assertThrows(NoJobAssigned.class, () -> jobApi.getProductsByAssigned(0));
 
         Product[] products = new Product[2];
         Job[] jobs = new Job[3];
@@ -66,6 +60,7 @@ public class JobApiTest {
         products[0].setID(0);
         jobs[0] = new Job(JobType.take_in, products[0], 1);
         jobs[1] = new Job(JobType.take_out, products[0], 1);
+        jobs[1].setDone(true);
         products[0].setJobs(Arrays.asList(jobs[0], jobs[1]));
 
         products[1] = new Product();
@@ -78,11 +73,14 @@ public class JobApiTest {
         );
 
 
-        response = new JSONObject(jobApi.getProductsByAssigned(1));
+        JSONObject response = new JSONObject(jobApi.getProductsByAssigned(1));
         assertEquals(2, response.getJSONArray("job").length());
 
-        assertEquals(0, response.getJSONArray("job").get(0));
-        assertEquals(1, response.getJSONArray("job").get(1));
+        assertEquals(0, response.getJSONArray("job").getJSONObject(0).get("id"));
+        assertEquals(1, response.getJSONArray("job").getJSONObject(1).get("id"));
+
+        assertEquals("take_in", response.getJSONArray("job").getJSONObject(0).get("type"));
+        assertEquals("take_in", response.getJSONArray("job").getJSONObject(1).get("type"));
 
         jobs[2].setDone(true);
         response = new JSONObject(jobApi.getProductsByAssigned(1));

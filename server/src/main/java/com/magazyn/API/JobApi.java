@@ -45,13 +45,15 @@ public class JobApi {
         List<Job> jobs = jobRepository.findAllByAssigned(id);
         if (jobs.isEmpty())
             throw new NoJobAssigned();
-        List<Integer> uniq = new ArrayList<>();
 
         JSONArray productIds = new JSONArray();
+        JSONObject jobJSON;
         for(Job job : jobs)
-            if (!job.isDone() && !uniq.contains(job.getProduct().getID())) {
-                productIds.put(job.getProduct().getID());
-                uniq.add(job.getProduct().getID());
+            if (!job.isDone()) {
+                jobJSON = new JSONObject();
+                jobJSON.put("id", job.getProduct().getID());
+                jobJSON.put("type", job.getJobType());
+                productIds.put(jobJSON);
             }
         JSONObject response = new JSONObject();
         response.put("job", productIds);
@@ -75,25 +77,8 @@ public class JobApi {
     @PutMapping("/api/job/gen")
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
-    public String generateJob(@RequestParam Map<String, String> allRequestParams) {
-        Job job = new Job();
-
-        // boolean for every field!
-        List<Boolean> is_valid = Arrays.asList(false, false, false);
-
-        //TODO
-        for (Map.Entry<String, String> param : allRequestParams.entrySet()) {
-            switch (param.getKey()) {
-                case "type":
-                    try {
-                        job.setJobType(JobType.valueOf(param.getValue()));
-                        is_valid.set(0, true);
-                    } catch (IllegalArgumentException ex) {
-                        throw new IllegalRequestException();
-                    }
-            }
-        }
-        return "";
+    public void generateNewJob() {
+        // TODO
     }
 
     @PutMapping("/api/job/confirm")

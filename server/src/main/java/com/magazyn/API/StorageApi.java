@@ -3,13 +3,15 @@ package com.magazyn.API;
 import com.magazyn.API.exceptions.IllegalRequestException;
 import com.magazyn.API.exceptions.NoEndPointException;
 import com.magazyn.API.exceptions.NoResourceFoundException;
-import com.magazyn.database.Product;
-import com.magazyn.database.ProductLocation;
+import com.magazyn.API.exceptions.WrongPlaceException;
+import com.magazyn.database.*;
 import com.magazyn.database.repositories.ProductLocationRepository;
 import com.magazyn.database.repositories.ProductRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +19,25 @@ import javax.transaction.Transactional;
 import java.util.*;
 import java.util.Map.Entry;
 
+import com.magazyn.Storage.StorageManager;
+import com.magazyn.database.Product;
+import com.magazyn.database.repositories.ProductDataRepository;
+
+
 @RestController
 public class StorageApi {
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
     @Autowired
-    ProductLocationRepository productLocationRepository;
+    private ProductLocationRepository productLocationRepository;
+    @Autowired
+    private ProductDataRepository productDataRepository;
+
+    @Autowired
+    StorageManager storage_manager;
+
+    @Autowired
+    com.magazyn.Map.Map map;
 
     @RequestMapping(value = "/api/storage/**")
     public String showError() {
@@ -36,6 +51,7 @@ public class StorageApi {
         ProductLocation productLocation = new ProductLocation();
         // boolean for every field!
         List<Boolean> is_valid = Arrays.asList(false, false, false);
+        int rack = 0, place = 0;
 
         for (Entry<String, String> param : allRequestParams.entrySet()) {
             switch (param.getKey()) {
@@ -50,13 +66,10 @@ public class StorageApi {
                     } catch (NoSuchElementException ex) {
                         throw new NoResourceFoundException();
                     }
-                    //TODO: sprawdzic czy istnieje szafka i miejsce o danym numerze
-                    // jesli nie wywolac NoResourceFoundException
-                    // sprawdzic czy miejsce jest wolne jesli nie wywolac
-                    // WrongPlaceException
                 case "rack":
                     try {
-                        productLocation.setID_rack(Integer.parseInt(param.getValue()));
+                        rack = Integer.parseInt(param.getValue());
+                        productLocation.setID_rack(rack);
                         is_valid.set(1, true);
                     } catch (NumberFormatException ex) {
                         throw new IllegalRequestException();
@@ -64,7 +77,8 @@ public class StorageApi {
                     break;
                 case "place":
                     try {
-                        productLocation.setRack_placement(Integer.parseInt(param.getValue()));
+                        place = Integer.parseInt(param.getValue());
+                        productLocation.setRack_placement(place);
                         is_valid.set(2, true);
                     } catch (NumberFormatException ex) {
                         throw new IllegalRequestException();
@@ -78,6 +92,12 @@ public class StorageApi {
         if (is_valid.contains(false))
             throw new IllegalRequestException();
 
+        if(!map.isPlaceCorrect(rack, place))
+            throw new NoResourceFoundException();
+
+        if(productLocationRepository.findByID_rackAndRack_placement(rack, place).get().getProduct() != null)
+            throw new WrongPlaceException();
+
         productLocationRepository.save(productLocation);
     }
 
@@ -85,21 +105,28 @@ public class StorageApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     public void delById(@PathVariable int rack, @PathVariable int place) {
-        try {
-            productLocationRepository.deleteByID_rackAndRack_placement(rack, place);
-            //TODO: sprawdzic czy istnieje szafka i miejsce o danym numerze
-            // jesli nie wywolac NoResourceFoundException
-            // sprawdzic czy miejsce jest zajeta jesli nie wywolac
-            // WrongPlaceException
-        } catch (NoSuchElementException ex) {
+        Optional<ProductLocation> location = productLocationRepository.findById(new ProductLocationId(rack, place));
+
+        if (!location.isPresent()) {
             throw new NoResourceFoundException();
         }
+
+        if (location.get().getProduct() == null) {
+            //Space is already free
+            throw new WrongPlaceException();
+        }
+
+        Product product = location.get().getProduct();
+        productRepository.delete(product);
+
+        location.get().setProduct(null);
+        productLocationRepository.save(location.get());
     }
 
     @GetMapping("/api/storage/place/{rack}/{place}")
     public String getProductById(@PathVariable int rack, @PathVariable int place) {
         try {
-            Optional<ProductLocation> productLocation = productLocationRepository.findByID_rackAndRack_placement(rack, place);
+            Optional<ProductLocation> productLocation = productLocationRepository.findById(new ProductLocationId(rack, place));
             int productId = productLocation.get().getProduct().getID();
             JSONObject response = new JSONObject();
             response.put("ID", productId);
@@ -113,29 +140,37 @@ public class StorageApi {
     @GetMapping("/api/storage/product_info/{id}")
     public String getProductLocationById(@PathVariable int id) {
         try {
-            List<Product> products = productRepository.findAllByProductData(id);
-
-            JSONObject response = new JSONObject();
-            JSONArray productLocations = new JSONArray();
-            JSONObject productLocationJSON;
-            ProductLocation productLocation;
-            for (Product product : products) {
-                productLocation = product.getProductLocation();
-                productLocationJSON = new JSONObject();
-                productLocationJSON.put("rack", productLocation.getID_rack());
-                productLocationJSON.put("place", productLocation.getRack_placement());
-                productLocations.put(productLocationJSON);
-            }
-
-            response.put("id", productLocations);
-            return response.toString();
+            productDataRepository.findById(id);
         } catch (NoSuchElementException e) {
             throw new NoResourceFoundException();
         }
+        List<Product> products = productRepository.findAllByProductData(id);
+
+        JSONObject response = new JSONObject();
+        JSONArray productLocations = new JSONArray();
+        JSONObject productLocationJSON;
+        ProductLocation productLocation;
+        for (Product product : products) {
+            productLocation = product.getProductLocation();
+            productLocationJSON = new JSONObject();
+            productLocationJSON.put("id", product.getID());
+            productLocationJSON.put("rack", productLocation.getID_rack());
+            productLocationJSON.put("place", productLocation.getRack_placement());
+            productLocations.put(productLocationJSON);
+        }
+
+        response.put("id", productLocations);
+        return response.toString();
     }
 
     @GetMapping("/api/storage/product_info/count/{id}")
     public String countProductData(@PathVariable int id) {
+        try { // sprawdzanie czy istnieje
+            productDataRepository.findById(id);
+        } catch (NoSuchElementException ex) {
+            throw new NoResourceFoundException();
+        }
+
         int count = productRepository.findAllByProductData(id).size();
         JSONObject response = new JSONObject();
         response.put("count", count);
@@ -149,7 +184,7 @@ public class StorageApi {
         JSONObject response = new JSONObject();
         JSONArray locationsArray = new JSONArray();
         JSONObject locationJSON;
-        for(ProductLocation productLocation : productLocations) {
+        for (ProductLocation productLocation : productLocations) {
             locationJSON = new JSONObject();
             locationJSON.put("id", productLocation.getProduct().getID());
             locationJSON.put("rack", productLocation.getID_rack());
@@ -163,7 +198,7 @@ public class StorageApi {
 
     @GetMapping("api/storage/search/{query_args}")
     @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
-    public String getProducts(@PathVariable String query_args, @RequestParam Map<String, String> allRequestParams){
+    public String getProducts(@PathVariable String query_args, @RequestParam Map<String, String> allRequestParams) {
         //TODO
 
         //        query_args = new String(Base64.getUrlDecoder().decode(query_args));
@@ -172,5 +207,42 @@ public class StorageApi {
 //
 //        return  queryCreator.fromKeyWords(query_args);
         return "";
+    }
+
+    @PutMapping("/api/storage/add")
+    void addProduct(@RequestParam int id) {
+        Optional<ProductData> requested_product_data = productDataRepository.findById(id);
+
+        if (requested_product_data.isEmpty()) {
+            throw new NoResourceFoundException();
+        }
+
+        try {
+            storage_manager.addNewProduct(requested_product_data.get());
+        } catch (RuntimeException exception) {
+            //TODO MAKE NEW EXCEPTION
+            System.err.println(exception.getMessage());
+            throw new NoResourceFoundException();
+        }
+    }
+
+    @DeleteMapping("/api/storage/remove")
+    void removeProduct(@RequestParam int id) {
+        Optional<Product> requested_product = productRepository.findById(id);
+
+        if (requested_product.isEmpty()) {
+            throw new NoResourceFoundException();
+        }
+
+        try {
+            if (!storage_manager.removeProduct(requested_product.get())) {
+                //TODO MAKE NEW EXCEPTION
+                throw new NoResourceFoundException();
+            }
+        } catch (RuntimeException exception) {
+            //TODO MAKE NEW EXCEPTION
+            System.err.println(exception.getMessage());
+            throw new NoResourceFoundException();
+        }
     }
 }

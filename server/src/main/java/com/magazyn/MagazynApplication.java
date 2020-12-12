@@ -1,16 +1,18 @@
 package com.magazyn;
 
-import com.magazyn.database.Job;
+/*import com.magazyn.database.Job;
 import com.magazyn.database.ProductData;
 import com.magazyn.database.Type;
 import com.magazyn.database.repositories.JobRepository;
 import com.magazyn.database.repositories.ProductDataRepository;
 import com.magazyn.database.repositories.TypeRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import org.springframework.context.annotation.Bean;
+*/
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class MagazynApplication {
@@ -19,7 +21,7 @@ public class MagazynApplication {
         SpringApplication.run(MagazynApplication.class, args);
     }
 
-    @Bean
+/*    @Bean
     public CommandLineRunner demo(ProductDataRepository repo1, TypeRepository repo2) throws Exception {
         return (args) -> {
 //            ProductData p = repo1.findAll().iterator().next();
@@ -36,5 +38,5 @@ public class MagazynApplication {
 //            System.out.println(repo1.findAllByName("p1").get(0).getID());
         };
     }
-
+*/
 }

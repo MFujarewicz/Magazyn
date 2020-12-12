@@ -1,7 +1,9 @@
 package com.magazyn.API;
 
+import com.magazyn.API.exceptions.IllegalRequestException;
 import com.magazyn.API.exceptions.NoEndPointException;
 import com.magazyn.API.exceptions.NoResourceFoundException;
+import com.magazyn.JobType;
 import com.magazyn.database.Job;
 import com.magazyn.database.Product;
 import com.magazyn.database.ProductData;
@@ -56,12 +58,13 @@ public class ProductApi {
         response.put("rack", productLocation.getID_rack());
         response.put("place", productLocation.getRack_placement());
         response.put("date_in", jobs.get(0).getDate());
-        response.put("date_out", jobs.get(1).getDate());
-        //TODO sprawdzic czy ma dwa
+        if (jobs.size() > 1)
+            response.put("date_out", jobs.get(1).getDate());
         response.put("data_id", productData.getID());
         JSONArray assigned = new JSONArray();
         assigned.put(jobs.get(0).getAssigned());
-        assigned.put(jobs.get(1).getAssigned());
+        if (jobs.size() > 1)
+            assigned.put(jobs.get(1).getAssigned());
         response.put("assigned", assigned);
 
         return response.toString();
@@ -69,11 +72,24 @@ public class ProductApi {
 
     @GetMapping("/api/product/in_storage/from/{from}/to/{to}")
     public String getProducts(@PathVariable Date from, @PathVariable Date to) {
-//        List<Job> jobs = jobRepository.findAllByDateBetween(from, to);
+        if (to.before(from))
+            throw new IllegalRequestException();
 
-        List<Job> current = new ArrayList<>();
+        List<Job> jobs = jobRepository.findAllByDateBeforeOrderByDate(to);
+        List<Integer> products = new ArrayList<>();
+
+        for (Job job : jobs)
+            if (job.isDone())
+                if (job.getJobType() == JobType.take_in)
+                    products.add(job.getProduct().getID());
+                else if (job.getDate().before(from))
+                    products.remove(job.getProduct().getID());
 
         JSONObject response = new JSONObject();
+        JSONArray ids = new JSONArray();
+        for (Integer id : products)
+            ids.put(id);
+        response.put("products", ids);
         return response.toString();
     }
 }

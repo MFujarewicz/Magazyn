@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.CONFLICT)
 public class WrongPlaceException extends RuntimeException {
+
     /**
      *
      */
+    private static final long serialVersionUID = -1175439043499963847L;
 }
