@@ -5,7 +5,9 @@ import javax.persistence.EntityManager;
 import com.magazyn.database.Job;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class AddNewJobImpl implements AddNewJob {
 
     @Autowired

@@ -1,5 +1,6 @@
 package com.magazyn.API;
 
+import com.magazyn.State;
 import com.magazyn.API.exceptions.IllegalRequestException;
 import com.magazyn.API.exceptions.NoEndPointException;
 import com.magazyn.API.exceptions.NoResourceFoundException;
@@ -130,7 +131,13 @@ public class StorageApi {
     @GetMapping("/api/storage/product_info/{id}")
     public String getProductLocationById(@PathVariable int id) {
         try {
-            List<Product> products = productRepository.findAllByProductData(id);
+            Optional<ProductData> product_data = product_data_repository.findById(id);
+
+            if (!product_data.isPresent()) {
+                throw new NoSuchElementException();
+            }
+
+            List<Product> products = productRepository.findAllByProductData(product_data.get());
 
             JSONObject response = new JSONObject();
             JSONArray productLocations = new JSONArray();
@@ -153,7 +160,13 @@ public class StorageApi {
 
     @GetMapping("/api/storage/product_info/count/{id}")
     public String countProductData(@PathVariable int id) {
-        int count = productRepository.findAllByProductData(id).size();
+        Optional<ProductData> product_data = product_data_repository.findById(id);
+
+            if (!product_data.isPresent()) {
+                throw new NoResourceFoundException();
+            }
+
+        int count = productRepository.findAllByProductData(product_data.get()).size();
         JSONObject response = new JSONObject();
         response.put("count", count);
         return response.toString();
@@ -210,14 +223,22 @@ public class StorageApi {
 
     @DeleteMapping("/api/storage/remove")
     void removeProduct(@RequestParam int id) {
-        Optional<Product> requested_product = productRepository.findById(id);
+        Optional<ProductData> requested_product_data = product_data_repository.findById(id);
 
-        if (requested_product.isEmpty()) {
+        if (requested_product_data.isEmpty()) {
+            throw new NoResourceFoundException();
+        }
+
+        List<Product> products = productRepository.findAllByProductDataAndState(requested_product_data.get(), State.in_storage);
+        Optional<Product> selceted_product = products.stream().filter((x) -> 
+            { return x.getState() == State.in_storage; }).findAny();
+
+        if (!selceted_product.isPresent()) {
             throw new NoResourceFoundException();
         }
 
         try {
-            if (!storage_manager.removeProduct(requested_product.get())) {
+            if (!storage_manager.removeProduct(selceted_product.get())) {
                 //TODO MAKE NEW EXCEPTION
                 throw new NoResourceFoundException();
             }

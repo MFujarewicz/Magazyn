@@ -29,6 +29,8 @@ public class SecurityInfo {
             message.put("name", jwt.getClaimAsString("preferred_username"));
             message.put("XX", authorities);
             message.put("ID", jwt.getSubject());
+
+            message.put("EemployeeID", jwt.getClaimAsString("EemployeeID"));
         }
         else {
             message.put("XX", "NO access");

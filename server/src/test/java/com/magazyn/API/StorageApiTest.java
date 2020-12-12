@@ -7,8 +7,10 @@ import com.magazyn.API.exceptions.IllegalRequestException;
 import com.magazyn.API.exceptions.NoEndPointException;
 import com.magazyn.API.exceptions.NoResourceFoundException;
 import com.magazyn.database.Product;
+import com.magazyn.database.ProductData;
 import com.magazyn.database.ProductLocation;
 import com.magazyn.database.ProductLocationId;
+import com.magazyn.database.repositories.ProductDataRepository;
 import com.magazyn.database.repositories.ProductLocationRepository;
 import com.magazyn.database.repositories.ProductRepository;
 import org.json.JSONException;
@@ -31,6 +33,8 @@ public class StorageApiTest {
     private ProductLocationRepository productLocationRepository;
     @Mock
     private ProductRepository productRepository;
+    @Mock
+    private ProductDataRepository productDataRepository;
 
     @Captor
     private ArgumentCaptor<ProductLocation> captor;
@@ -138,7 +142,12 @@ public class StorageApiTest {
 
     @Test
     public void getProductInfoByIdTest() throws JSONException {
-        when(productRepository.findAllByProductData(1)).thenReturn(
+        ProductData productData1 = new ProductData();
+        productData1.setID(1);
+
+        when(productDataRepository.findById(1)).thenReturn(Optional.of(productData1));
+        
+        when(productRepository.findAllByProductData(productData1)).thenReturn(
                 new ArrayList<Product>()
         );
 
@@ -162,7 +171,7 @@ public class StorageApiTest {
         productsLocations[2] = new ProductLocation(3, 3, products[2]);
         products[2].setProductLocation(productsLocations[2]);
 
-        when(productRepository.findAllByProductData(1)).thenReturn(
+        when(productRepository.findAllByProductData(productData1)).thenReturn(
                 Arrays.asList(products)
         );
 
@@ -181,7 +190,15 @@ public class StorageApiTest {
 
     @Test
     public void countProductDataTest() throws JSONException {
-        when(productRepository.findAllByProductData(0)).thenReturn(
+        ProductData productData0 = new ProductData();
+        productData0.setID(0);
+        ProductData productData1 = new ProductData();
+        productData1.setID(1);
+
+        when(productDataRepository.findById(0)).thenReturn(Optional.of(productData0));
+        when(productDataRepository.findById(1)).thenReturn(Optional.of(productData1));
+
+        when(productRepository.findAllByProductData(productData0)).thenReturn(
                 new ArrayList<>()
         );
         JSONObject response = new JSONObject(storageApi.countProductData(0));
@@ -190,7 +207,7 @@ public class StorageApiTest {
         Product[] products = new Product[10];
         for (int i = 0; i < products.length; i++)
             products[i] = new Product();
-        when(productRepository.findAllByProductData(1)).thenReturn(Arrays.asList(products));
+        when(productRepository.findAllByProductData(productData1)).thenReturn(Arrays.asList(products));
 
         response = new JSONObject(storageApi.countProductData(1));
         assertEquals(10, response.getInt("count"));
