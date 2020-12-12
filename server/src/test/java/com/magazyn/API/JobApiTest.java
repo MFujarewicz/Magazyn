@@ -1,11 +1,17 @@
 package com.magazyn.API;
 
+import com.magazyn.API.exceptions.AlreadyDoneException;
+import com.magazyn.API.exceptions.IllegalRequestException;
 import com.magazyn.JobType;
 import com.magazyn.API.exceptions.NoJobAssigned;
+import com.magazyn.State;
+import com.magazyn.Storage.JobGenerator;
 import com.magazyn.database.Job;
 import com.magazyn.database.Product;
 import com.magazyn.database.ProductLocation;
 import com.magazyn.database.repositories.JobRepository;
+import com.magazyn.database.repositories.ProductLocationRepository;
+import com.magazyn.database.repositories.ProductRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
