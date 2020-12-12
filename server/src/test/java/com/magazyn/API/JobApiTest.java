@@ -1,11 +1,10 @@
 package com.magazyn.API;
 
 import com.magazyn.JobType;
+import com.magazyn.API.exceptions.NoJobAssigned;
 import com.magazyn.database.Job;
 import com.magazyn.database.Product;
-import com.magazyn.database.ProductLocation;
 import com.magazyn.database.repositories.JobRepository;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -55,8 +53,7 @@ public class JobApiTest {
                 new ArrayList<Job>()
         );
 
-        JSONObject response = new JSONObject(jobApi.getProductsByAssigned(1));
-        assertEquals(0, response.getJSONArray("job").length());
+        assertThrows(NoJobAssigned.class, () -> {jobApi.getProductsByAssigned(1); });
 
         Mockito.reset(jobRepository);
 
@@ -78,7 +75,7 @@ public class JobApiTest {
         );
 
 
-        response = new JSONObject(jobApi.getProductsByAssigned(1));
+        JSONObject response = new JSONObject(jobApi.getProductsByAssigned(1));
         assertEquals(2, response.getJSONArray("job").length());
 
         assertEquals(0, response.getJSONArray("job").get(0));

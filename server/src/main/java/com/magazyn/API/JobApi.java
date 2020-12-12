@@ -1,9 +1,7 @@
 package com.magazyn.API;
 
-import com.magazyn.API.exceptions.IllegalRequestException;
 import com.magazyn.API.exceptions.NoEndPointException;
 import com.magazyn.API.exceptions.NoJobAssigned;
-import com.magazyn.JobType;
 import com.magazyn.database.Job;
 import com.magazyn.database.repositories.JobRepository;
 import org.json.JSONArray;
@@ -20,7 +18,7 @@ public class JobApi {
     @Autowired
     JobRepository jobRepository;
 
-    @RequestMapping(value = "/api/storage/**")
+    @RequestMapping(value = "/api/job/**")
     public String showError() {
         throw new NoEndPointException();
     }
@@ -75,25 +73,8 @@ public class JobApi {
     @PutMapping("/api/job/gen")
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
-    public String generateJob(@RequestParam Map<String, String> allRequestParams) {
-        Job job = new Job();
+    public void generateNewJob() {
 
-        // boolean for every field!
-        List<Boolean> is_valid = Arrays.asList(false, false, false);
-
-        //TODO
-        for (Map.Entry<String, String> param : allRequestParams.entrySet()) {
-            switch (param.getKey()) {
-                case "type":
-                    try {
-                        job.setJobType(JobType.valueOf(param.getValue()));
-                        is_valid.set(0, true);
-                    } catch (IllegalArgumentException ex) {
-                        throw new IllegalRequestException();
-                    }
-            }
-        }
-        return "";
     }
 
     @PutMapping("/api/job/confirm")

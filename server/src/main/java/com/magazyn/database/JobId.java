@@ -5,6 +5,11 @@ import com.magazyn.JobType;
 import java.io.Serializable;
 
 public class JobId implements Serializable {
+    /**
+     *
+     */
+    private static final long serialVersionUID = -7702272437903926803L;
+
     private Product product;
 
     private JobType jobType;

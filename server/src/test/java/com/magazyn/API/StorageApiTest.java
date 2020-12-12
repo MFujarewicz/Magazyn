@@ -3,12 +3,12 @@ package com.magazyn.API;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
 import com.magazyn.API.exceptions.IllegalRequestException;
 import com.magazyn.API.exceptions.NoEndPointException;
 import com.magazyn.API.exceptions.NoResourceFoundException;
 import com.magazyn.database.Product;
 import com.magazyn.database.ProductLocation;
+import com.magazyn.database.ProductLocationId;
 import com.magazyn.database.repositories.ProductLocationRepository;
 import com.magazyn.database.repositories.ProductRepository;
 import org.json.JSONException;
@@ -34,6 +34,9 @@ public class StorageApiTest {
 
     @Captor
     private ArgumentCaptor<ProductLocation> captor;
+
+    @Captor
+    private ArgumentCaptor<Product> product_captor;
 
     @Test
     public void addTest() {
@@ -88,27 +91,37 @@ public class StorageApiTest {
 
     @Test
     public void delTest() {
-        storageApi.delById(1, 1);
-        verify(productLocationRepository).deleteByID_rackAndRack_placement(1, 1);
+        Product product = new Product();
+        product.setID(1);
 
-        doThrow(new NoSuchElementException()).when(productLocationRepository).deleteByID_rackAndRack_placement(0, 0);
+        ProductLocation location = new ProductLocation(1, 1, product);
+        product.setProductLocation(location);
+
+        when(productLocationRepository.findById(new ProductLocationId(1, 1))).thenReturn( Optional.of(location) );
+
+        storageApi.delById(1, 1);
+        verify(productLocationRepository).save(captor.capture());
+        verify(productRepository).delete(product_captor.capture());
+        assertEquals(null, captor.getValue().getProduct());
+        assertEquals(product, product_captor.getValue());
+
+        when(productLocationRepository.findById(new ProductLocationId(0, 0))).thenReturn( Optional.empty() );
         assertThrows(NoResourceFoundException.class, () -> {
             storageApi.delById(0, 0);
         });
-
     }
 
     @Test
     public void getByIdTest() throws JSONException {
         Product product = new Product();
         product.setID(0);
-        when(productLocationRepository.findByID_rackAndRack_placement(0, 0)).thenReturn(
+        when(productLocationRepository.findById(new ProductLocationId(0, 0))).thenReturn(
                 Optional.of(new ProductLocation(0, 0, product)));
 
         JSONObject response = new JSONObject(storageApi.getProductById(0, 0));
-        assertTrue(response.getString("ID").equals("0"));
+        assertTrue(response.getInt("ID") == 0);
 
-        when(productLocationRepository.findByID_rackAndRack_placement(1, 1)).thenReturn(
+        when(productLocationRepository.findById(new ProductLocationId(1, 1))).thenReturn(
                 Optional.empty()
         );
         assertThrows(NoResourceFoundException.class, () -> {
@@ -117,10 +130,10 @@ public class StorageApiTest {
 
         product = new Product();
         product.setID(2);
-        when(productLocationRepository.findByID_rackAndRack_placement(2, 2)).thenReturn(
+        when(productLocationRepository.findById(new ProductLocationId(2, 2))).thenReturn(
                 Optional.of(new ProductLocation(2, 2, product)));
         response = new JSONObject(storageApi.getProductById(2, 2));
-        assertTrue(response.getString("ID").equals("2"));
+        assertTrue(response.getInt("ID") == 2);
     }
 
     @Test

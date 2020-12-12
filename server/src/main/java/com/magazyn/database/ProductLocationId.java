@@ -24,5 +24,21 @@ public class ProductLocationId implements Serializable {
         Rack_placement = 0;
     }
 
-    //TODO hashCODE() equals()
+    @Override
+    public boolean equals(Object other_obj) {
+        if (!(other_obj instanceof ProductLocationId)) {
+            return false;
+        }
+
+        ProductLocationId other = (ProductLocationId)other_obj;
+        return other.ID_rack == ID_rack && other.Rack_placement == Rack_placement;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = Integer.hashCode(ID_rack);
+        hash ^= Integer.hashCode(Rack_placement) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+
+        return hash;
+    }
 }

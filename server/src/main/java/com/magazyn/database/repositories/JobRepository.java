@@ -6,8 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Date;
 import java.util.List;
 
-public interface JobRepository extends CrudRepository<Job, Integer>{
+public interface JobRepository extends CrudRepository<Job, Integer>, AddNewJob{
     List<Job> findAllByAssigned(int id);
-    List<Job> findAllByDateBefore(Date from, Date to);
+    //List<Job> findAllByDateBefore(Date from, Date to);
     void deleteAllByAssigned(int id);
 }
