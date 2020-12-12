@@ -4,11 +4,16 @@ import com.magazyn.database.Product;
 import com.magazyn.database.ProductLocation;
 import com.magazyn.database.ProductLocationId;
 
+import com.magazyn.database.ProductLocationId;
 import org.springframework.data.repository.CrudRepository;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductLocationRepository extends CrudRepository<ProductLocation, ProductLocationId>, NumberOfNonExistingRacksQuery{
@@ -20,4 +25,7 @@ public interface ProductLocationRepository extends CrudRepository<ProductLocatio
     public Integer addProductSafe(ProductLocation location, Product new_product_id);
 
     Optional<ProductLocation> findAllByProduct(Product product);
+
+    long deleteByID_rackAndRack_placement(int rack, int place);
+    Optional<ProductLocation> findByID_rackAndRack_placement(int rack, int place);
 }

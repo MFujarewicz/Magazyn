@@ -70,5 +70,6 @@ public class Job {
 
     public void setDone(boolean done) {
         this.done = done;
+        this.date = new Date();
     }
 }

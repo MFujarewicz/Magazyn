@@ -3,9 +3,15 @@ package com.magazyn.API;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+
 import com.magazyn.API.exceptions.IllegalRequestException;
 import com.magazyn.API.exceptions.NoEndPointException;
 import com.magazyn.API.exceptions.NoResourceFoundException;
+import com.magazyn.API.exceptions.WrongPlaceException;
+import com.magazyn.Map.AStarShortestPathsGenerator;
+import com.magazyn.Map.Map;
+import com.magazyn.Map.MapDrawer;
+import com.magazyn.Map.MapParser;
 import com.magazyn.database.Product;
 import com.magazyn.database.ProductData;
 import com.magazyn.database.ProductLocation;
@@ -35,6 +41,8 @@ public class StorageApiTest {
     private ProductRepository productRepository;
     @Mock
     private ProductDataRepository productDataRepository;
+    @Mock
+    private Map map;
 
     @Captor
     private ArgumentCaptor<ProductLocation> captor;
@@ -44,6 +52,7 @@ public class StorageApiTest {
 
     @Test
     public void addTest() {
+        when(map.isPlaceCorrect(1, 0)).thenReturn(true);
 
         HashMap<String, String> param = new HashMap<>();
         assertThrows(IllegalRequestException.class, () -> storageApi.addLocation(param));
@@ -70,7 +79,11 @@ public class StorageApiTest {
             storageApi.addLocation(param);
         });
 
-        param.put("place", "2");
+        ProductLocation productLocation = new ProductLocation(1, 0, null);
+        param.put("place", "0");
+        when(productLocationRepository.findByID_rackAndRack_placement(1, 0)).thenReturn(
+                Optional.of(productLocation));
+
         assertDoesNotThrow(() -> {
             storageApi.addLocation(param);
         });
@@ -78,7 +91,10 @@ public class StorageApiTest {
         verify(productLocationRepository).save(captor.capture());
         assertEquals(1, captor.getValue().getProduct().getID());
         assertEquals(1, captor.getValue().getID_rack());
-        assertEquals(2, captor.getValue().getRack_placement());
+        assertEquals(0, captor.getValue().getRack_placement());
+
+        productLocation.setProduct(product);
+        assertThrows(WrongPlaceException.class, () -> storageApi.addLocation(param));
 
         param.clear();
         param.put("id", "2");
@@ -109,10 +125,18 @@ public class StorageApiTest {
         assertEquals(null, captor.getValue().getProduct());
         assertEquals(product, product_captor.getValue());
 
-        when(productLocationRepository.findById(new ProductLocationId(0, 0))).thenReturn( Optional.empty() );
+        when(productLocationRepository.findById(new ProductLocationId(0, 0))).thenReturn(Optional.empty());
         assertThrows(NoResourceFoundException.class, () -> {
             storageApi.delById(0, 0);
         });
+
+        location = new ProductLocation(1, 1, null);
+        when(productLocationRepository.findById(new ProductLocationId(0, 0))).
+                thenReturn(Optional.of(location));
+        assertThrows(WrongPlaceException.class, () -> {
+            storageApi.delById(0, 0);
+        });
+
     }
 
     @Test
@@ -146,7 +170,7 @@ public class StorageApiTest {
         productData1.setID(1);
 
         when(productDataRepository.findById(1)).thenReturn(Optional.of(productData1));
-        
+
         when(productRepository.findAllByProductData(productData1)).thenReturn(
                 new ArrayList<Product>()
         );
@@ -178,6 +202,10 @@ public class StorageApiTest {
 
         response = new JSONObject(storageApi.getProductLocationById(1));
         assertEquals(3, response.getJSONArray("id").length());
+
+        assertEquals(0, response.getJSONArray("id").getJSONObject(0).getInt("id"));
+        assertEquals(1, response.getJSONArray("id").getJSONObject(1).getInt("id"));
+        assertEquals(2, response.getJSONArray("id").getJSONObject(2).getInt("id"));
 
         assertEquals(1, response.getJSONArray("id").getJSONObject(0).getInt("rack"));
         assertEquals(2, response.getJSONArray("id").getJSONObject(1).getInt("rack"));

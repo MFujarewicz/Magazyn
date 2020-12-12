@@ -63,13 +63,15 @@ public class JobApi {
         List<Job> jobs = jobRepository.findAllByAssigned(id);
         if (jobs.isEmpty())
             throw new NoJobAssigned();
-        List<Integer> uniq = new ArrayList<>();
 
         JSONArray productIds = new JSONArray();
+        JSONObject jobJSON;
         for(Job job : jobs)
-            if (!job.isDone() && !uniq.contains(job.getProduct().getID())) {
-                productIds.put(job.getProduct().getID());
-                uniq.add(job.getProduct().getID());
+            if (!job.isDone()) {
+                jobJSON = new JSONObject();
+                jobJSON.put("id", job.getProduct().getID());
+                jobJSON.put("type", job.getJobType());
+                productIds.put(jobJSON);
             }
         JSONObject response = new JSONObject();
         response.put("job", productIds);
@@ -153,7 +155,7 @@ public class JobApi {
 
         for (Job job : unfinished_jobs) {
             Product product = job.getProduct();
-            
+
             if (product.getState() == State.to_be_stored) {
                 product.setState(State.in_storage);
             } else if (product.getState() == State.to_be_taken) {
