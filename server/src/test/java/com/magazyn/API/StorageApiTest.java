@@ -3,7 +3,7 @@ package com.magazyn.API;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
+import com.magazyn.State;
 import com.magazyn.API.exceptions.IllegalRequestException;
 import com.magazyn.API.exceptions.NoEndPointException;
 import com.magazyn.API.exceptions.NoResourceFoundException;
@@ -12,6 +12,7 @@ import com.magazyn.Map.AStarShortestPathsGenerator;
 import com.magazyn.Map.Map;
 import com.magazyn.Map.MapDrawer;
 import com.magazyn.Map.MapParser;
+import com.magazyn.Storage.StorageManager;
 import com.magazyn.database.Product;
 import com.magazyn.database.ProductData;
 import com.magazyn.database.ProductLocation;
@@ -43,6 +44,8 @@ public class StorageApiTest {
     private ProductDataRepository productDataRepository;
     @Mock
     private Map map;
+    @Mock
+    private StorageManager storage_manager;
 
     @Captor
     private ArgumentCaptor<ProductLocation> captor;
@@ -284,5 +287,71 @@ public class StorageApiTest {
     @Test
     public void errorTest() {
         assertThrows(NoEndPointException.class, () -> storageApi.showError());
+    }
+
+    @Test
+    public void addProductTest() {
+        ProductData productData0 = new ProductData();
+        productData0.setID(0);
+        ProductData productData1 = new ProductData();
+        productData1.setID(1);
+
+        when(productDataRepository.findById(0)).thenReturn(Optional.of(productData0));
+        when(productDataRepository.findById(1)).thenReturn(Optional.of(productData1));
+        when(productDataRepository.findById(3)).thenReturn(Optional.empty());
+
+        storageApi.addProduct(0);
+
+        verify(storage_manager).addNewProduct(productData0);
+
+        assertThrows(NoResourceFoundException.class, () -> {storageApi.addProduct(3);});
+
+        doThrow(RuntimeException.class).when(storage_manager).addNewProduct(productData1);
+
+        assertThrows(NoResourceFoundException.class, () -> {storageApi.addProduct(1);});
+    }
+
+    @Test
+    public void removeProductTest() {
+        ProductData productData0 = new ProductData();
+        productData0.setID(0);
+        ProductData productData3 = new ProductData();
+        productData3.setID(3);
+        ProductData productData4 = new ProductData();
+        productData3.setID(4);
+
+        when(productDataRepository.findById(0)).thenReturn(Optional.of(productData0));
+        when(productDataRepository.findById(1)).thenReturn(Optional.empty());
+        when(productDataRepository.findById(3)).thenReturn(Optional.of(productData3));
+        when(productDataRepository.findById(4)).thenReturn(Optional.of(productData4));
+
+        Product product1 = new Product();
+        product1.setID(1);
+        Product product2 = new Product();
+        product2.setID(2);
+
+        when(storage_manager.removeProduct(product1)).thenReturn(true);
+        when(storage_manager.removeProduct(product2)).thenReturn(false);
+
+        when(productRepository.findAllByProductDataAndState(productData0, State.in_storage)).thenReturn(
+            Arrays.asList(new Product[]{ product1 })
+        );
+        when(productRepository.findAllByProductDataAndState(productData3, State.in_storage)).thenReturn(
+            Arrays.asList(new Product[]{ product2 })
+        );
+        when(productRepository.findAllByProductDataAndState(productData4, State.in_storage)).thenReturn(
+            Arrays.asList(new Product[]{})
+        );
+
+        storageApi.removeProduct(0);
+
+        verify(storage_manager).removeProduct(product1);
+
+        assertThrows(NoResourceFoundException.class, () -> {storageApi.removeProduct(1);});
+
+        assertThrows(NoResourceFoundException.class, () -> {storageApi.removeProduct(3);});
+
+        assertThrows(NoResourceFoundException.class, () -> {storageApi.removeProduct(4);});
+
     }
 }

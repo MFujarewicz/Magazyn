@@ -2,6 +2,7 @@ package com.magazyn.API;
 
 import com.magazyn.JobType;
 import com.magazyn.State;
+import com.magazyn.API.exceptions.AlreadyDoneException;
 import com.magazyn.API.exceptions.IllegalRequestException;
 import com.magazyn.API.exceptions.NoEndPointException;
 import com.magazyn.API.exceptions.NoJobAssigned;
@@ -142,7 +143,7 @@ public class JobApi {
     @PutMapping("/api/job/confirm")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void confirm(){
+    public void confirmJob() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         int employee_id;
         try {
@@ -152,6 +153,10 @@ public class JobApi {
         }
 
         List<Job> unfinished_jobs = jobRepository.findAllByAssignedAndDone(employee_id, false);
+
+        if (unfinished_jobs.size() == 0) {
+            throw new AlreadyDoneException();
+        }
 
         for (Job job : unfinished_jobs) {
             Product product = job.getProduct();

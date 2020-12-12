@@ -25,4 +25,14 @@ public class StorageConfiguration {
     public JobGenerator getDefaultJobGenerator() {
         return new JobGenerator();
     }
+
+    @Bean(name="max_weight")
+    public Double getMaxWeight() {
+        return 100.0;
+    }
+
+    @Bean(name="combine_jobs")
+    public Boolean getCombineJobs() {
+        return true;
+    }
 }
