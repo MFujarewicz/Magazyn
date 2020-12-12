@@ -13,7 +13,7 @@ import com.magazyn.database.repositories.JobRepository;
 import com.magazyn.database.repositories.ProductRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 public class JobGenerator {
 
@@ -24,8 +24,18 @@ public class JobGenerator {
     @Autowired
     IPathGenerator path_generator;
 
-    double max_weight = 100.0;
-    boolean combine_jobs = true;
+    @Autowired
+    @Qualifier("max_weight")
+    Double max_weight;
+
+    @Autowired
+    @Qualifier("combine_jobs")
+    boolean combine_jobs;
+
+    public void resetSettings(Double max_weight, boolean combine_jobs) {
+        this.max_weight = max_weight;
+        this.combine_jobs = combine_jobs;
+    }
     
     public List<AbstractMap.SimpleEntry<Product, JobType>> generateNewJob(int employee_id) {
         Random random = new Random();
@@ -54,7 +64,7 @@ public class JobGenerator {
         return products;
     }
 
-    public List<Product> generateStoreJob(int employee_id) {
+    private List<Product> generateStoreJob(int employee_id) {
         List<Product> products_ready_to_be_stored = product_repository.findProductsReadyToStore(State.to_be_stored, JobType.take_in);
         ArrayList<Product> products = new ArrayList<>();
 
@@ -76,7 +86,7 @@ public class JobGenerator {
         return products;
     }
 
-    public List<Product> generateTakeJob(int employee_id) {
+    private List<Product> generateTakeJob(int employee_id) {
         List<Product> products_ready_to_be_taken = product_repository.findProductsReadyToTake(State.to_be_taken, JobType.take_out);
         ArrayList<Product> products = new ArrayList<>();
 

@@ -24,7 +24,6 @@ public class DatabaseIntegrityConfiguration {
 
     @EventListener(ApplicationReadyEvent.class)
     public void checkDataBase() {
-        return;/*
 
         if (product_location_repository.numberOfNonExistingRacks(map.getRacks()) != 0) {
             throw new BeanCreationException("Database contains information about non existing racks!");
@@ -43,6 +42,6 @@ public class DatabaseIntegrityConfiguration {
             }
         }
 
-        System.out.println("Database integrity check ended");*/
+        System.out.println("Database integrity check ended");
     }
 }

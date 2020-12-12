@@ -216,7 +216,6 @@ public class StorageApi {
             storage_manager.addNewProduct(requested_product_data.get());
         } catch (RuntimeException exception) {
             //TODO MAKE NEW EXCEPTION
-            System.err.println(exception.getMessage());
             throw new NoResourceFoundException();
         }
     }
@@ -230,21 +229,18 @@ public class StorageApi {
         }
 
         List<Product> products = productRepository.findAllByProductDataAndState(requested_product_data.get(), State.in_storage);
-        Optional<Product> selceted_product = products.stream().filter((x) -> 
-            { return x.getState() == State.in_storage; }).findAny();
 
-        if (!selceted_product.isPresent()) {
+        if (products.size() < 1) {
             throw new NoResourceFoundException();
         }
 
         try {
-            if (!storage_manager.removeProduct(selceted_product.get())) {
+            if (!storage_manager.removeProduct(products.get(0))) {
                 //TODO MAKE NEW EXCEPTION
                 throw new NoResourceFoundException();
             }
         } catch (RuntimeException exception) {
             //TODO MAKE NEW EXCEPTION
-            System.err.println(exception.getMessage());
             throw new NoResourceFoundException();
         }
     }
