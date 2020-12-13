@@ -5,19 +5,11 @@ import static org.mockito.Mockito.*;
 
 
 import com.magazyn.API.exceptions.IllegalRequestException;
-import com.magazyn.API.exceptions.NoEndPointException;
 import com.magazyn.API.exceptions.NoResourceFoundException;
-import com.magazyn.API.exceptions.WrongPlaceException;
 import com.magazyn.JobType;
-import com.magazyn.Map.AStarShortestPathsGenerator;
-import com.magazyn.Map.Map;
-import com.magazyn.Map.MapDrawer;
-import com.magazyn.Map.MapParser;
 import com.magazyn.State;
 import com.magazyn.database.*;
 import com.magazyn.database.repositories.JobRepository;
-import com.magazyn.database.repositories.ProductDataRepository;
-import com.magazyn.database.repositories.ProductLocationRepository;
 import com.magazyn.database.repositories.ProductRepository;
 import org.json.JSONException;
 import org.json.JSONObject;

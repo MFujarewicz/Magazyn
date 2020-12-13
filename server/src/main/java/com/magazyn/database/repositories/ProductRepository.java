@@ -22,7 +22,7 @@ public interface ProductRepository extends CrudRepository<Product, Integer>{
     List<Product> findAllByProductData(ProductData productData);
 
     //Add sort by date
-    List<Product> findAllByProductDataAndState(ProductData productData, State state);
+    List<Product> findAllByProductDataAndStateOrderByLastModifiedAsc(ProductData productData, State state);
 
     /**
      * IMPORTANT: to_be_stored_enum has to equal to State.to_be_stored and take_in_enum to JobType.take_in!!!!

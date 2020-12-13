@@ -1,7 +1,6 @@
 package com.magazyn.database;
 
 import com.magazyn.State;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;

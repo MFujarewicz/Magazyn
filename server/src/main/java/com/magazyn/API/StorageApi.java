@@ -5,8 +5,6 @@ import com.magazyn.API.exceptions.IllegalRequestException;
 import com.magazyn.API.exceptions.NoEndPointException;
 import com.magazyn.API.exceptions.NoResourceFoundException;
 import com.magazyn.API.exceptions.WrongPlaceException;
-import com.magazyn.State;
-import com.magazyn.database.*;
 import com.magazyn.database.Product;
 import com.magazyn.database.ProductLocation;
 import com.magazyn.database.ProductLocationId;
@@ -15,8 +13,6 @@ import com.magazyn.database.repositories.ProductRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,13 +21,9 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import com.magazyn.Storage.StorageManager;
-import com.magazyn.database.Product;
 import com.magazyn.database.repositories.ProductDataRepository;
 
-
-import com.magazyn.Storage.StorageManager;
 import com.magazyn.database.ProductData;
-import com.magazyn.database.repositories.ProductDataRepository;
 
 @RestController
 public class StorageApi {
@@ -104,7 +96,7 @@ public class StorageApi {
         if (!map.isPlaceCorrect(rack, place))
             throw new NoResourceFoundException();
 
-        if (productLocationRepository.findByID_rackAndRack_placement(rack, place).get().getProduct() != null)
+        if (productLocationRepository.findById(new ProductLocationId(rack, place)).get().getProduct() != null)
             throw new WrongPlaceException();
 
         productLocationRepository.save(productLocation);
@@ -248,7 +240,7 @@ public class StorageApi {
             throw new NoResourceFoundException();
         }
 
-        List<Product> products = productRepository.findAllByProductDataAndState(requested_product_data.get(), State.in_storage);
+        List<Product> products = productRepository.findAllByProductDataAndStateOrderByLastModifiedAsc(requested_product_data.get(), State.in_storage);
 
         if (products.size() < 1) {
             throw new NoResourceFoundException();

@@ -8,10 +8,7 @@ import com.magazyn.API.exceptions.IllegalRequestException;
 import com.magazyn.API.exceptions.NoEndPointException;
 import com.magazyn.API.exceptions.NoResourceFoundException;
 import com.magazyn.API.exceptions.WrongPlaceException;
-import com.magazyn.Map.AStarShortestPathsGenerator;
 import com.magazyn.Map.Map;
-import com.magazyn.Map.MapDrawer;
-import com.magazyn.Map.MapParser;
 import com.magazyn.Storage.StorageManager;
 import com.magazyn.database.Product;
 import com.magazyn.database.ProductData;
@@ -84,7 +81,7 @@ public class StorageApiTest {
 
         ProductLocation productLocation = new ProductLocation(1, 0, null);
         param.put("place", "0");
-        when(productLocationRepository.findByID_rackAndRack_placement(1, 0)).thenReturn(
+        when(productLocationRepository.findById(new ProductLocationId(1, 0))).thenReturn(
                 Optional.of(productLocation));
 
         assertDoesNotThrow(() -> {
@@ -333,13 +330,13 @@ public class StorageApiTest {
         when(storage_manager.removeProduct(product1)).thenReturn(true);
         when(storage_manager.removeProduct(product2)).thenReturn(false);
 
-        when(productRepository.findAllByProductDataAndState(productData0, State.in_storage)).thenReturn(
+        when(productRepository.findAllByProductDataAndStateOrderByLastModifiedAsc(productData0, State.in_storage)).thenReturn(
             Arrays.asList(new Product[]{ product1 })
         );
-        when(productRepository.findAllByProductDataAndState(productData3, State.in_storage)).thenReturn(
+        when(productRepository.findAllByProductDataAndStateOrderByLastModifiedAsc(productData3, State.in_storage)).thenReturn(
             Arrays.asList(new Product[]{ product2 })
         );
-        when(productRepository.findAllByProductDataAndState(productData4, State.in_storage)).thenReturn(
+        when(productRepository.findAllByProductDataAndStateOrderByLastModifiedAsc(productData4, State.in_storage)).thenReturn(
             Arrays.asList(new Product[]{})
         );
 
