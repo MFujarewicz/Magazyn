@@ -46,34 +46,31 @@ public class JobApi {
 
     @GetMapping("/api/job/is_free/{id}")
     public String isFree(@PathVariable int id) {
-        List<Job> jobs = jobRepository.findAllByAssigned(id);
+        List<Job> jobs = jobRepository.findAllByAssignedAndDone(id, false);
 
         JSONObject response = new JSONObject();
-        response.put("is_free", true);
-        for(Job job : jobs)
-            if(!job.isDone()) {
-                response.put("is_free", false);
-                break;
-            }
+        if (jobs.isEmpty())
+            response.put("is_free", true);
+        else
+            response.put("is_free", false);
 
         return response.toString();
     }
 
     @GetMapping("/api/job/{id}")
     public String getProductsByAssigned(@PathVariable int id) {
-        List<Job> jobs = jobRepository.findAllByAssigned(id);
+        List<Job> jobs = jobRepository.findAllByAssignedAndDone(id, false);
         if (jobs.isEmpty())
             throw new NoJobAssigned();
 
         JSONArray productIds = new JSONArray();
         JSONObject jobJSON;
-        for(Job job : jobs)
-            if (!job.isDone()) {
-                jobJSON = new JSONObject();
-                jobJSON.put("id", job.getProduct().getID());
-                jobJSON.put("type", job.getJobType());
-                productIds.put(jobJSON);
-            }
+        for (Job job : jobs) {
+            jobJSON = new JSONObject();
+            jobJSON.put("id", job.getProduct().getID());
+            jobJSON.put("type", job.getJobType());
+            productIds.put(jobJSON);
+        }
         JSONObject response = new JSONObject();
         response.put("job", productIds);
         return response.toString();
@@ -84,13 +81,23 @@ public class JobApi {
     @Transactional
     public void delByAssigned(@PathVariable int id, @PathVariable boolean done) {
         try {
-            jobRepository.deleteAllByAssigned(id);
+            if (!done)
+                jobRepository.deleteAllByAssignedAndDone(id, false);
+            else {
+                List<Job> jobs = jobRepository.findAllByAssignedAndDone(id, false);
+                if (jobs.isEmpty())
+                    throw new NoSuchElementException();
+                for (Job job : jobs) {
+                    if (job.getJobType() == JobType.take_in)
+                        job.getProduct().setState(State.in_storage);
+                    else if (job.getJobType() == JobType.take_out)
+                        job.getProduct().setState(State.done);
+                    job.setDone(true);
+                }
+            }
         } catch (NoSuchElementException ex) {
             throw new NoJobAssigned();
         }
-
-        if(!done);
-            //TODO wrocic produkty do kolejki
     }
 
     @Secured("ROLE_user")
@@ -110,19 +117,18 @@ public class JobApi {
             throw new IllegalRequestException();
         }
 
-        List<AbstractMap.SimpleEntry<Product, JobType>> products =  job_generator.generateNewJob(employee_id);
+        List<AbstractMap.SimpleEntry<Product, JobType>> products = job_generator.generateNewJob(employee_id);
 
         JSONObject job = new JSONObject();
 
         job.put("count", products.size());
 
-        for (int i = 0; i < products.size(); i++)
-        {
+        for (int i = 0; i < products.size(); i++) {
             JSONObject product = new JSONObject();
             product.put("ID", products.get(i).getKey().getID());
             product.put("type", products.get(i).getValue().toString());
 
-            Optional<ProductLocation> product_location =  product_location_repository.findAllByProduct(products.get(i).getKey());
+            Optional<ProductLocation> product_location = product_location_repository.findAllByProduct(products.get(i).getKey());
             if (!product_location.isPresent()) {
                 throw new IllegalRequestException();
             }
