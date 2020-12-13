@@ -29,6 +29,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.AbstractMap;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -57,15 +58,14 @@ public class JobApiTest {
         Job job = new Job();
         job.setAssigned(1);
 
-        when(jobRepository.findAllByAssigned(1)).thenReturn(
+        when(jobRepository.findAllByAssignedAndDone(1, false)).thenReturn(
                 Arrays.asList(job)
         );
 
         JSONObject response = new JSONObject(jobApi.isFree(1));
         assertEquals(false, response.getBoolean("is_free"));
 
-        job.setDone(true);
-        response = new JSONObject(jobApi.isFree(1));
+        response = new JSONObject(jobApi.isFree(2));
         assertEquals(true, response.getBoolean("is_free"));
     }
 
@@ -79,7 +79,6 @@ public class JobApiTest {
         products[0].setID(0);
         jobs[0] = new Job(JobType.take_in, products[0], 1);
         jobs[1] = new Job(JobType.take_out, products[0], 1);
-        jobs[1].setDone(true);
         products[0].setJobs(Arrays.asList(jobs[0], jobs[1]));
 
         products[1] = new Product();
@@ -87,30 +86,45 @@ public class JobApiTest {
         jobs[2] = new Job(JobType.take_in, products[1], 1);
         products[1].setJobs(Arrays.asList(jobs[2]));
 
-        when(jobRepository.findAllByAssigned(1)).thenReturn(
+        when(jobRepository.findAllByAssignedAndDone(1, false)).thenReturn(
                 Arrays.asList(jobs)
         );
 
 
         JSONObject response = new JSONObject(jobApi.getProductsByAssigned(1));
-        assertEquals(2, response.getJSONArray("job").length());
+        assertEquals(3, response.getJSONArray("job").length());
 
         assertEquals(0, response.getJSONArray("job").getJSONObject(0).get("id"));
-        assertEquals(1, response.getJSONArray("job").getJSONObject(1).get("id"));
+        assertEquals(0, response.getJSONArray("job").getJSONObject(1).get("id"));
+        assertEquals(1, response.getJSONArray("job").getJSONObject(2).get("id"));
 
         assertEquals("take_in", response.getJSONArray("job").getJSONObject(0).get("type"));
-        assertEquals("take_in", response.getJSONArray("job").getJSONObject(1).get("type"));
-
-        jobs[2].setDone(true);
-        response = new JSONObject(jobApi.getProductsByAssigned(1));
-        assertEquals(1, response.getJSONArray("job").length());
+        assertEquals("take_out", response.getJSONArray("job").getJSONObject(1).get("type"));
+        assertEquals("take_in", response.getJSONArray("job").getJSONObject(2).get("type"));
 
     }
 
     @Test
     public void delTest() {
+        jobApi.delByAssigned(1, false);
+        verify(jobRepository).deleteAllByAssignedAndDone(1, false);
+
+        doThrow(new NoSuchElementException()).when(jobRepository).deleteAllByAssignedAndDone(1, false);
+        assertThrows(NoJobAssigned.class, () -> jobApi.delByAssigned(1, false));
+
+        Job[] jobs = new Job[2];
+        Product product1 = new Product(null, State.to_be_stored);
+        Product product2 = new Product(null, State.to_be_taken);
+        jobs[0] = new Job(JobType.take_in, product1, 1);
+        jobs[1] = new Job(JobType.take_out, product2, 1);
+
+        when(jobRepository.findAllByAssignedAndDone(1, false)).thenReturn(Arrays.asList(jobs));
         jobApi.delByAssigned(1, true);
-        verify(jobRepository).deleteAllByAssigned(1);
+
+        assertEquals(State.in_storage, product1.getState());
+        assertEquals(State.done, product2.getState());
+        assertTrue(jobs[0].isDone());
+        assertTrue(jobs[1].isDone());
     }
 
     @Test
