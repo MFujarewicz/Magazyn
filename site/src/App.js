@@ -30,12 +30,14 @@ class App extends Component {
 
 
 
+
+
   render() {
     if (this.state.keycloak) {
       if (this.state.authenticated) return (
         <>
           <div className='Menu'><Menu handler={this.handler} /></div>
-          <Page pageShow={this.state.pageShown}/>  
+          <Page pageShow={this.state.pageShown} logout={this.state.keycloak.logout} />
         </>
 
       ); else return (<div>Unable to authenticate!</div>)
@@ -48,20 +50,26 @@ class App extends Component {
   }
 }
 
-function Page(props){
-  if (props.pageShow ===  '/productList') return <ProductList/> 
-  if (props.pageShow ===  '/map') return <Map/> 
-  if (props.pageShow ===  '/getProduct') return <GetProduct/> 
-  if (props.pageShow ===  '/add/product') return <AddProduct/> 
-  if (props.pageShow ===  '/add/manufacturer') return <AddManufacturer/> 
-  if (props.pageShow ===  '/add/productType') return <AddProductType/> 
-  if (props.pageShow ===  '/path') return <Path/> 
-  if (props.pageShow ===  '/raportType1') return <RaportType1/> 
-  if (props.pageShow ===  '/raportType2') return <RaportType2/> 
+
+function Page(props) {
+  if (props.pageShow === '/productList') return <ProductList />
+  if (props.pageShow === '/map') return <Map />
+  if (props.pageShow === '/getProduct') return <GetProduct />
+  if (props.pageShow === '/add/product') return <AddProduct />
+  if (props.pageShow === '/add/manufacturer') return <AddManufacturer />
+  if (props.pageShow === '/add/productType') return <AddProductType />
+  if (props.pageShow === '/path') return <Path />
+  if (props.pageShow === '/raportType1') return <RaportType1 />
+  if (props.pageShow === '/raportType2') return <RaportType2 />
+  if (props.pageShow === '/logout') return <Logout logout={props.logout} />
 
 }
 
-function ProductList() {
+function Logout(props) {
+  props.logout()
+}
+
+function ProductList(props) {
   return (
     <>
       <p>Lista Produktów</p>

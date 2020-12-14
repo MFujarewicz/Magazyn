@@ -67,6 +67,10 @@ function Menu(props) {
               },
             ],
           },
+          {
+            title: 'Wyloguj',
+            itemId: '/logout',
+          },
         ]}
       />
     </>
