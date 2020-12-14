@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -77,27 +78,37 @@ public class ProductDataApi {
      * @param query_args       Base64 URL safe encoded key word for search query "word1,word2,..."
      * @param allRequestParams Parameters for search query
      * @return JSON with requested query
+     * 
+     * @apiNote:
+     *  (BETWEEN) weight: min_weight, max_weight
+     *  (LIKE) name: name
+     *  (LIKE) type_name: type_name
+     *  (LIKE) manufacturer_name: manufacturer_name
+     *  (SORT DESC) sort: name, type_name, manufacturer_name
      */
-    @GetMapping("/api/product_data/search/{joined}/{query_args}")
+    @PostMapping("/api/product_data/search/{joined}/{query_args}")
     @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
     public String getProductsData(@PathVariable boolean joined, @PathVariable String query_args, @RequestParam Map<String, String> allRequestParams) {
-        return "";
-        //Not yet supported
-        //TOD
-        /*
-        query_args = new String(Base64.getUrlDecoder().decode(query_args));
+        List<ProductData> products_data = null;
 
-        ProductsQueryCreator query;
-
-        if (joined) {
-            query = new ProductsQueryCreator(ProductsQueryCreator.QUERY_TYPE.GET_JOIN);
-        }
-        else {
-            query = new ProductsQueryCreator(ProductsQueryCreator.QUERY_TYPE.GET);
+        try {
+            query_args = new String(Base64.getUrlDecoder().decode(query_args));
+            products_data = product_data_repository.buildQuery(query_args, allRequestParams);
+        } catch (Exception exception) {
+            throw new IllegalRequestException();
         }
 
-        return query.fromKeyWords(query_args);
-        */
+
+        JSONObject response = new JSONObject();
+        JSONArray products_data_array = new JSONArray();
+
+        for (ProductData product_data : products_data) {
+            products_data_array.put(ProductDataToJSON(product_data, joined));
+        }
+
+        response.put("product_data", products_data_array);
+
+        return response.toString();
     }
 
     @PutMapping("/api/product_data/id/{id}")
