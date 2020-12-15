@@ -1,4 +1,4 @@
-package com.magazyn.API;
+package com.magazyn.API.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

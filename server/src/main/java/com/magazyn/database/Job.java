@@ -63,4 +63,13 @@ public class Job {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+        this.date = new Date();
+    }
 }

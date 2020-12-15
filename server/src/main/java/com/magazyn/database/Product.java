@@ -3,12 +3,16 @@ package com.magazyn.database;
 import com.magazyn.State;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
 public class Product {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer ID;
+
+    private Date lastModified = new Date();
 
     @ManyToOne
     @JoinColumn(name = "product_data_id")
@@ -61,6 +65,7 @@ public class Product {
 
     public void setState(State state) {
         this.state = state;
+        this.lastModified = new Date();
     }
 
     public ProductLocation getProductLocation() {
@@ -69,5 +74,13 @@ public class Product {
 
     public void setProductLocation(ProductLocation productLocation) {
         this.productLocation = productLocation;
+    }
+
+    public Date getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
     }
 }

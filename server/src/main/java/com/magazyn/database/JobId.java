@@ -5,14 +5,38 @@ import com.magazyn.JobType;
 import java.io.Serializable;
 
 public class JobId implements Serializable {
-    private Product product;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -7702272437903926803L;
+
+    private Integer product;
 
     private JobType jobType;
 
     public JobId(Product product, JobType jobType) {
-        this.product = product;
+        this.product = product.getID();
         this.jobType = jobType;
     }
 
-    //TODO hashCODE() equals()
+    public JobId() {
+    }
+
+    @Override
+    public boolean equals(Object other_obj) {
+        if (!(other_obj instanceof JobId)) {
+            return false;
+        }
+
+        JobId other = (JobId) other_obj;
+        return other.jobType.equals(jobType) && other.product.equals(product);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = jobType.hashCode();
+        hash ^= product.hashCode() + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+
+        return hash;
+    }
 }

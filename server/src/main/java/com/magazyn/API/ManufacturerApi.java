@@ -8,6 +8,9 @@ import java.util.Map.Entry;
 
 import javax.transaction.Transactional;
 
+import com.magazyn.API.exceptions.IllegalRequestException;
+import com.magazyn.API.exceptions.NoEndPointException;
+import com.magazyn.API.exceptions.NoResourceFoundException;
 import com.magazyn.database.Manufacturer;
 import com.magazyn.database.repositories.ManufacturerRepository;
 
