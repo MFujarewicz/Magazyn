@@ -7,7 +7,9 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -303,6 +305,78 @@ public class ProductDataApiTest {
     @Test
     public void errorTest() {
         assertThrows(NoEndPointException.class, () -> { product_data_api.showError(); });
+    }
+
+    @Test
+    public void searchTest1() {
+        String args = ",";
+        HashMap<String, String> values = new HashMap<>();
+
+        final String args_enc = Base64.getEncoder().encodeToString(args.getBytes(StandardCharsets.UTF_8));
+
+        product_data_api.getProductsData(true, args_enc, values);
+
+        verify(product_data_repository).buildQuery(args, values);
+
+        final String args_enc_bad = ",.//*&*()";
+        assertThrows(IllegalRequestException.class, () -> { product_data_api.getProductsData(true, args_enc_bad, values); });
+
+        when(product_data_repository.buildQuery(args, values)).thenThrow(new IllegalArgumentException());
+        assertThrows(IllegalRequestException.class, () -> { product_data_api.getProductsData(true, args_enc, values); });
+    }
+
+    @Test
+    public void searchTest2() {
+        String args = ",";
+        HashMap<String, String> values = new HashMap<>();
+
+        String args_enc = Base64.getEncoder().encodeToString(args.getBytes(StandardCharsets.UTF_8));
+
+        Type[] types = getTypeArray();
+        Manufacturer[] manufacturers = getManufacturerArray();
+
+        ProductData[] products_data = new ProductData[3];
+        products_data[0] = new ProductData("pd1", 1.1, types[1], manufacturers[0]);
+        products_data[0].setID(1);
+        products_data[1] = new ProductData("pd2", 2.2, types[2], manufacturers[0]);
+        products_data[1].setID(2);
+        products_data[2] = new ProductData("pd3", 3.3, types[1], manufacturers[1]);
+        products_data[2].setID(3);
+
+        when(product_data_repository.buildQuery(args, values)).thenReturn(
+            Arrays.asList(products_data)
+        );
+
+        JSONObject response = new JSONObject(product_data_api.getProductsData(false, args_enc, values));
+
+        assertEquals(3, response.getJSONArray("product_data").length());
+
+        assertEquals("pd1", response.getJSONArray("product_data").getJSONObject(0).getString("name"));
+        assertEquals("pd2", response.getJSONArray("product_data").getJSONObject(1).getString("name"));
+        assertEquals("pd3", response.getJSONArray("product_data").getJSONObject(2).getString("name"));
+
+        assertEquals(1, response.getJSONArray("product_data").getJSONObject(0).getInt("type_id"));
+        assertEquals(2, response.getJSONArray("product_data").getJSONObject(1).getInt("type_id"));
+        assertEquals(1, response.getJSONArray("product_data").getJSONObject(2).getInt("type_id"));
+
+        assertEquals(0, response.getJSONArray("product_data").getJSONObject(0).getInt("manufacturer_id"));
+        assertEquals(0, response.getJSONArray("product_data").getJSONObject(1).getInt("manufacturer_id"));
+        assertEquals(1, response.getJSONArray("product_data").getJSONObject(2).getInt("manufacturer_id"));
+
+        response = new JSONObject(product_data_api.getProductsData(true, args_enc, values));
+        assertEquals(3, response.getJSONArray("product_data").length());
+
+        assertEquals("pd1", response.getJSONArray("product_data").getJSONObject(0).getString("name"));
+        assertEquals("pd2", response.getJSONArray("product_data").getJSONObject(1).getString("name"));
+        assertEquals("pd3", response.getJSONArray("product_data").getJSONObject(2).getString("name"));
+
+        assertEquals("t1", response.getJSONArray("product_data").getJSONObject(0).getJSONObject("type").getString("name"));
+        assertEquals("t2", response.getJSONArray("product_data").getJSONObject(1).getJSONObject("type").getString("name"));
+        assertEquals("t1", response.getJSONArray("product_data").getJSONObject(2).getJSONObject("type").getString("name"));
+
+        assertEquals("m0", response.getJSONArray("product_data").getJSONObject(0).getJSONObject("manufacturer").getString("name"));
+        assertEquals("m0", response.getJSONArray("product_data").getJSONObject(1).getJSONObject("manufacturer").getString("name"));
+        assertEquals("m1", response.getJSONArray("product_data").getJSONObject(2).getJSONObject("manufacturer").getString("name"));
     }
 
     private Manufacturer[] getManufacturerArray() {

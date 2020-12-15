@@ -87,7 +87,6 @@ public class ProductDataApi {
      *  (SORT DESC) sort: name, type_name, manufacturer_name
      */
     @PostMapping("/api/product_data/search/{joined}/{query_args}")
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
     public String getProductsData(@PathVariable boolean joined, @PathVariable String query_args, @RequestParam Map<String, String> allRequestParams) {
         List<ProductData> products_data = null;
 
