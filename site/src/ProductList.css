@@ -1,0 +1,35 @@
+.button {
+    background: #a8deff;
+    cursor: pointer;
+    text-align: center;
+}
+
+.button:hover{
+    background: lightskyblue;
+}
+
+.button:active {
+    background:#43a0d9;
+}
+
+td {
+    border: 1px solid lightgray;
+    padding: 0.2rem;
+    text-align: left;
+}
+
+th {
+    border: 1px solid lightgray;
+}
+
+tr{
+    border: 2px solid darkgray;
+}
+
+tr:nth-child(even){
+    background: #f2f9ff;
+}
+
+table {
+    padding-top: 10px;
+}
