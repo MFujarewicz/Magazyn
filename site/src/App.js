@@ -1,12 +1,12 @@
 import './App.css';
 import Menu from './Menu'
 import Job from './Job'
+import ProductList from "./ProductList";
 import React, { Component } from 'react'
 import Keycloak from 'keycloak-js';
 
+
 class App extends Component {
-
-
 
   constructor(props) {
     super(props);
@@ -21,7 +21,6 @@ class App extends Component {
     })
   }
 
-
   componentDidMount() {
     const keycloak = Keycloak('/keycloak.json');
     keycloak.init({ onLoad: 'login-required' }).then(authenticated => {
@@ -29,17 +28,13 @@ class App extends Component {
     })
   }
 
-
-
-
-
   render() {
     if (this.state.keycloak) {
       if (this.state.authenticated) return (
         <>
-          <div class="App">
-          <div className='Menu'><Menu handler={this.handler} /></div>
-          <Page pageShow={this.state.pageShown} logout={this.state.keycloak.logout} keycloak={this.state.keycloak} />
+          <div className="App">
+            <div className='Menu'><Menu handler={this.handler} /></div>
+            <Page pageShow={this.state.pageShown} logout={this.state.keycloak.logout} keycloak={this.state.keycloak} />
           </div>
         </>
 
@@ -55,7 +50,7 @@ class App extends Component {
 
 
 function Page(props) {
-  if (props.pageShow === '/productList') return <ProductList />
+  if (props.pageShow === '/productList') return <ProductList keycloak={props.keycloak}/>
   if (props.pageShow === '/map') return <Map />
   if (props.pageShow === '/getProduct') return <GetProduct />
   if (props.pageShow === '/add/product') return <AddProduct />
@@ -72,20 +67,12 @@ function Logout(props) {
   props.logout()
 }
 
-function ProductList(props) {
-  return (
-    <>
-      <p>Lista Produktów</p>
-    </>
-  )
-}
-
 function Map() {
   //Change to API URL
   return (
     <>
-      <div class="Map">
-        <img src="http://127.0.0.1/map.png" alt="Mapa"/>
+      <div className="Map">
+        <img src="http://127.0.0.1/map.png" alt="Mapa" />
         <div class="Map_info"><div class="square_in"></div><p>Punkt odbioru produktów</p></div>
         <div class="Map_info"><div class="square_out"></div><p>Punkt wysyłki produktów</p></div>
         <div class="Map_info"><div class="square_rack"></div><p>Strona szafki, z której można pobrać produkty </p></div>
