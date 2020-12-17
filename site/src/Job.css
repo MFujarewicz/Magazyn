@@ -1,0 +1,40 @@
+
+.Job {
+    padding: auto;
+    width: 80%;
+}
+
+.new_job_button {
+    width: 50%;
+    margin: auto;
+    border: 2px;
+    border-style: solid;
+    border-color: green;
+    border-radius: 25px;
+}
+
+.SingleJob {
+    text-align: left;
+    border: 2px solid green;
+    border-radius: 25px;
+    margin-top: 10px;
+    padding: 5px;
+    padding-left: 15px;
+}
+
+.confirm_job_button {
+    width: 50%;
+    padding: 5px;
+    margin: auto;
+    border: 2px;
+    border-style: solid;
+    border-color: green;
+    border-radius: 25px;
+}
+
+.arrow {
+    margin: auto;
+    width: 10%;
+    text-align: center;
+    font-size: 200%;
+}

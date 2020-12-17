@@ -48,8 +48,8 @@ function Menu(props) {
 
           },
           {
-            title: 'Trasa',
-            itemId: '/path',
+            title: 'Zadanie',
+            itemId: '/job',
 
           },
           {

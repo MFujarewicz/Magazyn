@@ -1,8 +1,8 @@
 {
-  "realm": "demo",
+  "realm": "Warehouse",
   "auth-server-url": "http://localhost:8180/auth/",
   "ssl-required": "external",
-  "resource": "Magazyn",
+  "resource": "Warehouse",
   "public-client": true,
   "verify-token-audience": true,
   "use-resource-role-mappings": true,

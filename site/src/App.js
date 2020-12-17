@@ -1,5 +1,6 @@
 import './App.css';
 import Menu from './Menu'
+import Job from './Job'
 import React, { Component } from 'react'
 import Keycloak from 'keycloak-js';
 
@@ -36,8 +37,10 @@ class App extends Component {
     if (this.state.keycloak) {
       if (this.state.authenticated) return (
         <>
+          <div class="App">
           <div className='Menu'><Menu handler={this.handler} /></div>
-          <Page pageShow={this.state.pageShown} logout={this.state.keycloak.logout} />
+          <Page pageShow={this.state.pageShown} logout={this.state.keycloak.logout} keycloak={this.state.keycloak} />
+          </div>
         </>
 
       ); else return (<div>Unable to authenticate!</div>)
@@ -58,7 +61,7 @@ function Page(props) {
   if (props.pageShow === '/add/product') return <AddProduct />
   if (props.pageShow === '/add/manufacturer') return <AddManufacturer />
   if (props.pageShow === '/add/productType') return <AddProductType />
-  if (props.pageShow === '/path') return <Path />
+  if (props.pageShow === '/job') return <Job keycloak={props.keycloak} />
   if (props.pageShow === '/raportType1') return <RaportType1 />
   if (props.pageShow === '/raportType2') return <RaportType2 />
   if (props.pageShow === '/logout') return <Logout logout={props.logout} />
@@ -78,9 +81,15 @@ function ProductList(props) {
 }
 
 function Map() {
+  //Change to API URL
   return (
     <>
-      <p>Mapa</p>
+      <div class="Map">
+        <img src="http://127.0.0.1/map.png" alt="Mapa"/>
+        <div class="Map_info"><div class="square_in"></div><p>Punkt odbioru produktów</p></div>
+        <div class="Map_info"><div class="square_out"></div><p>Punkt wysyłki produktów</p></div>
+        <div class="Map_info"><div class="square_rack"></div><p>Strona szafki, z której można pobrać produkty </p></div>
+      </div>
     </>
   )
 }
@@ -117,14 +126,6 @@ function AddProductType() {
   )
 }
 
-function Path() {
-  return (
-    <>
-      <p>Trasa</p>
-    </>
-  )
-}
-
 function RaportType1() {
   return (
     <>
@@ -141,4 +142,3 @@ function RaportType2() {
   )
 }
 export default App;
-
