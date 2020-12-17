@@ -1,0 +1,4 @@
+user - password
+test_user - user
+test_menager - menager
+test_admin - admin
