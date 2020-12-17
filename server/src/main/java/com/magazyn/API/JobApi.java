@@ -69,11 +69,34 @@ public class JobApi {
             jobJSON = new JSONObject();
             jobJSON.put("id", job.getProduct().getID());
             jobJSON.put("type", job.getJobType());
+
+            ProductLocation product_location = job.getProduct().getProductLocation();
+
+            JSONObject location = new JSONObject();
+            location.put("rack", product_location.getID_rack());
+            location.put("place", product_location.getRack_placement());
+
+            jobJSON.put("location", location);
+
             productIds.put(jobJSON);
         }
         JSONObject response = new JSONObject();
         response.put("job", productIds);
         return response.toString();
+    }
+
+    @Secured("ROLE_user")
+    @GetMapping("/api/job/me/")
+    public String getProductsByAssignedMe() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int employee_id;
+        try {
+            employee_id = Integer.parseInt(((Jwt) authentication.getPrincipal()).getClaimAsString("EmployeeID"));
+        } catch (Exception exception) {
+            throw new IllegalRequestException();
+        }
+
+        return getProductsByAssigned(employee_id);
     }
 
     @DeleteMapping("/api/job/admin/{id}/{done}")

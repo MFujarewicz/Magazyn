@@ -20,6 +20,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -38,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class JobApiTest {
+    @Spy
     @InjectMocks
     private JobApi jobApi = new JobApi();
 
@@ -80,11 +82,13 @@ public class JobApiTest {
         jobs[0] = new Job(JobType.take_in, products[0], 1);
         jobs[1] = new Job(JobType.take_out, products[0], 1);
         products[0].setJobs(Arrays.asList(jobs[0], jobs[1]));
+        products[0].setProductLocation(new ProductLocation(0, 0, products[0]));
 
         products[1] = new Product();
         products[1].setID(1);
         jobs[2] = new Job(JobType.take_in, products[1], 1);
         products[1].setJobs(Arrays.asList(jobs[2]));
+        products[1].setProductLocation(new ProductLocation(1, 1, products[1]));
 
         when(jobRepository.findAllByAssignedAndDone(1, false)).thenReturn(
                 Arrays.asList(jobs)
@@ -98,10 +102,45 @@ public class JobApiTest {
         assertEquals(0, response.getJSONArray("job").getJSONObject(1).get("id"));
         assertEquals(1, response.getJSONArray("job").getJSONObject(2).get("id"));
 
+        assertEquals(0, response.getJSONArray("job").getJSONObject(0).getJSONObject("location").getInt("rack"));
+        assertEquals(1, response.getJSONArray("job").getJSONObject(2).getJSONObject("location").getInt("place"));
+
         assertEquals("take_in", response.getJSONArray("job").getJSONObject(0).get("type"));
         assertEquals("take_out", response.getJSONArray("job").getJSONObject(1).get("type"));
         assertEquals("take_in", response.getJSONArray("job").getJSONObject(2).get("type"));
 
+    }
+
+    @Test
+    public void getProductsByAssignedMeTest1() throws JSONException {
+        Authentication a = mock(Authentication.class);
+        SecurityContext c = mock(SecurityContext.class);
+        when(c.getAuthentication()).thenReturn(a);
+        SecurityContextHolder.setContext(c);
+        Jwt jwt = mock(Jwt.class);
+
+        //No Employee id
+        assertThrows(IllegalRequestException.class, () -> {jobApi.getProductsByAssignedMe();});
+
+        when(a.getPrincipal()).thenReturn(jwt);
+        when(jwt.getClaimAsString("EmployeeID")).thenReturn("sbc");
+
+        assertThrows(IllegalRequestException.class, () -> {jobApi.getProductsByAssignedMe();});
+    }
+
+    @Test
+    public void getProductsByAssignedMeTest2() throws JSONException {
+        Authentication a = mock(Authentication.class);
+        SecurityContext c = mock(SecurityContext.class);
+        when(c.getAuthentication()).thenReturn(a);
+        SecurityContextHolder.setContext(c);
+        Jwt jwt = mock(Jwt.class);
+        when(a.getPrincipal()).thenReturn(jwt);
+        when(jwt.getClaimAsString("EmployeeID")).thenReturn("1");
+
+        assertThrows(NoJobAssigned.class, () -> {jobApi.getProductsByAssignedMe();});
+
+        verify(jobApi).getProductsByAssigned(1);
     }
 
     @Test
