@@ -1,6 +1,8 @@
 package com.magazyn.API;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -75,6 +77,12 @@ public class ManufacturerApi {
 
     @GetMapping("/api/manufacturer/name/{name}")
     public String getManufacturersByName(@PathVariable String name) {
+        try {
+            name = new String(Base64.getUrlDecoder().decode(name.getBytes(StandardCharsets.UTF_8)));
+        } catch (Exception exception) {
+            throw new IllegalRequestException();
+        }
+
         Iterable<Manufacturer> manufacturers = manufacturer_repository.findByName(name);
 
         JSONObject response = new JSONObject();

@@ -1,7 +1,9 @@
 package com.magazyn.API;
 
 import java.util.List;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -74,6 +76,12 @@ public class TypeApi {
 
     @GetMapping("/api/type/name/{name}")
     public String getTypesByName(@PathVariable String name) {
+        try {
+            name = new String(Base64.getUrlDecoder().decode(name.getBytes(StandardCharsets.UTF_8)));
+        } catch (Exception exception) {
+            throw new IllegalRequestException();
+        }
+
         Iterable<Type> types = type_repository.findByName(name);
 
         JSONObject response = new JSONObject();

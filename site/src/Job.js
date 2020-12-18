@@ -1,7 +1,6 @@
 import './Job.css';
 
 import React, { Component } from 'react'
-import Keycloak from 'keycloak-js';
 
 class Job extends Component {
     api_url = "";
@@ -100,7 +99,6 @@ class Job extends Component {
         if (!this.state.ready) {
             return (
                 <>
-                <p>Zadania</p>
                 </>
             );
         }
@@ -155,10 +153,9 @@ export default Job;
 function CurrentJobList(props) {
     var job_info = [];
     
-    var i = 0;
     for (var job of props.json.job) {
         job_info.push(
-            <div class="SingleJob" id={job.id}>
+            <div class="SingleJob" key={job.id}>
                 <p>Produkt:{job.id} Zadanie:{job.type} Miejsce: Szafa {job.location.rack} Pozycja {job.location.place}</p>
             </div>
         );
@@ -180,29 +177,29 @@ function NewJobList(props) {
         if (job.type === 'take_out') { take_out = true; }
 
         job_info.push(
-            <div class="SingleJob" id={job.ID}>
+            <div class="SingleJob" key={job.ID}>
                 <p>Produkt:{job.ID} Zadanie:{job.type} Miejsce: Szafa {job.location.rack} Pozycja {job.location.place}</p>
             </div>
         );
 
         if (i < count - 1) {
-            job_info.push(<div class="arrow" id={"arrow" + i}>⇩</div>);
+            job_info.push(<div class="arrow" key={"arrow" + i}>⇩</div>);
         }
     }
 
     if (take_in) {
-        job_info.unshift(<div class="arrow" id={"arrow" + i}>⇩</div>);
+        job_info.unshift(<div class="arrow" key={"arrow" + ++i}>⇩</div>);
         job_info.unshift(
-            <div class="SingleJob" id={job.ID}>
+            <div class="SingleJob" key={job.ID}>
                 <p>Odbierz produkty</p>
             </div>
         );
     }
 
     if (take_out) {
-        job_info.push(<div class="arrow" id={"arrow" + i}>⇩</div>);
+        job_info.push(<div class="arrow" key={"arrow" + ++i}>⇩</div>);
         job_info.push(
-            <div class="SingleJob" id={job.ID}>
+            <div class="SingleJob" key={job.ID}>
                 <p>Przenieś produkty do wysłania</p>
             </div>
         );

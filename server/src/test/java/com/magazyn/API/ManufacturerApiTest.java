@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -108,10 +109,13 @@ public class ManufacturerApiTest {
             Arrays.asList(manufacturers)
         );
 
-        JSONObject response = new JSONObject(manufacturer_api.getManufacturersByName("t1"));
+        String t1 = Base64.getUrlEncoder().encodeToString("t1".getBytes());
+        String t2 = Base64.getUrlEncoder().encodeToString("t2".getBytes());
+
+        JSONObject response = new JSONObject(manufacturer_api.getManufacturersByName(t1));
         assertEquals(response.getJSONArray("manufacturers").length(), 0);
 
-        response = new JSONObject(manufacturer_api.getManufacturersByName("t2"));
+        response = new JSONObject(manufacturer_api.getManufacturersByName(t2));
         assertEquals(response.getJSONArray("manufacturers").length(), 2);
         
         assertTrue(response.getJSONArray("manufacturers").getJSONObject(0).getInt("ID") == 1 || response.getJSONArray("manufacturers").getJSONObject(0).getInt("ID") == 12);

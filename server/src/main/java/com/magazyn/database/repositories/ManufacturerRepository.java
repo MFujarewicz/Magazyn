@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ManufacturerRepository extends CrudRepository<Manufacturer, Integer>{
 
-    @Query("SELECT t FROM Type t WHERE name = ?1")
+    @Query("SELECT m FROM Manufacturer m WHERE name LIKE ?1")
     public Iterable<Manufacturer> findByName(String type_name);
 
 }

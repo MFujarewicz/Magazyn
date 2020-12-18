@@ -23,7 +23,7 @@ function Menu(props) {
 
           },
           {
-            title: 'Dodaj',
+            title: 'Edytuj',
             itemId: '/add',
 
             subNav: [

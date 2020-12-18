@@ -1,6 +1,9 @@
 import './App.css';
 import Menu from './Menu'
 import Job from './Job'
+import TypeEdit from './TypeEdit'
+import ManufacturerEdit from './ManufacturerEdit'
+import ProductDataEdit from './ProductDataEdit'
 import React, { Component } from 'react'
 import Keycloak from 'keycloak-js';
 
@@ -58,9 +61,9 @@ function Page(props) {
   if (props.pageShow === '/productList') return <ProductList />
   if (props.pageShow === '/map') return <Map />
   if (props.pageShow === '/getProduct') return <GetProduct />
-  if (props.pageShow === '/add/product') return <AddProduct />
-  if (props.pageShow === '/add/manufacturer') return <AddManufacturer />
-  if (props.pageShow === '/add/productType') return <AddProductType />
+  if (props.pageShow === '/add/product') return <ProductDataEdit keycloak={props.keycloak} />
+  if (props.pageShow === '/add/manufacturer') return <ManufacturerEdit keycloak={props.keycloak} />
+  if (props.pageShow === '/add/productType') return <TypeEdit keycloak={props.keycloak} />
   if (props.pageShow === '/job') return <Job keycloak={props.keycloak} />
   if (props.pageShow === '/raportType1') return <RaportType1 />
   if (props.pageShow === '/raportType2') return <RaportType2 />
@@ -106,22 +109,6 @@ function AddProduct() {
   return (
     <>
       <p>Dodaj produkt</p>
-    </>
-  )
-}
-
-function AddManufacturer() {
-  return (
-    <>
-      <p>Dodaj producenta</p>
-    </>
-  )
-}
-
-function AddProductType() {
-  return (
-    <>
-      <p>Dodaj typ produktu</p>
     </>
   )
 }
