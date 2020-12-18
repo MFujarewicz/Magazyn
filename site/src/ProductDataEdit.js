@@ -251,7 +251,7 @@ class ProductDataEdit extends Component {
                                 <option value="type_name">Nazwa typu</option>
                                 <option value="manufacturer_name">Nazwa producenta</option>
                             </select>
-                            <label htmlFor="sort_rev">Odwóć wynik</label>
+                            <label htmlFor="sort_rev" class="rev_label">Odwóć wynik</label>
                             <input name="sort_rev" class="checkbox" defaultChecked={this.rev_print} type="checkbox" onChange={e => this.rev_print = e.target.checked}></input>
                         </div>
                         <div>

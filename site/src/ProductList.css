@@ -2,6 +2,8 @@
     background: #a8deff;
     cursor: pointer;
     text-align: center;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
 .button:hover{
@@ -12,8 +14,18 @@
     background:#43a0d9;
 }
 
+.ProductList {
+    width: 70%;
+    margin: auto;
+}
+
+.ProductListTable {
+    width: 100%;
+    display: table
+}
+
 td {
-    border: 1px solid lightgray;
+    
     padding: 0.2rem;
     text-align: left;
 }
@@ -32,4 +44,20 @@ tr:nth-child(even){
 
 table {
     padding-top: 10px;
+}
+
+.ProductSearch {
+    text-align: left;
+    border: 1px solid lightgray;
+    margin-top: 10px;
+}
+
+.ProductSearch > div {
+    display: block;
+    padding: 1em;
+    flex-wrap: nowrap;
+}
+
+.ProductSearch > div > label {
+    padding-left: 30px;
 }

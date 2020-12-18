@@ -98,3 +98,7 @@
     width: 5%;
     float: none;
 }
+
+.rev_label {
+    padding-right: 10px;
+}
