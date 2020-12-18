@@ -74,6 +74,7 @@ function ProductListShow(props) {
                     <th>Producent</th>
                     <th>Typ</th>
                     <th>Dodaj do magazynu</th>
+                    <th>Dodaj do wysłania</th>
                 </tr>
             </thead>
             <tbody>
@@ -93,6 +94,7 @@ function ProductRow(props) {
             <td>{props.product.manufacturer.name} </td>
             <td>{props.product.type.name}  </td>
             <td className='button' onClick={addProduct(props.product.ID, 1, props.api_url, props.auth_headers)}>Dodaj</td>
+            <td className='button' onClick={removeProduct(props.product.ID, 1, props.api_url, props.auth_headers)}>Dodaj</td>
         </tr>
 
     )
@@ -114,6 +116,26 @@ function addProduct(id, amount, api_url, auth_headers) {
         }
         else {
             alert('Błąd: nie dodano produktu')
+        }
+    }
+}
+
+function removeProduct(id, amount, api_url, auth_headers) {
+    return async function () {
+
+        var data = new URLSearchParams()
+        data.append('id', id)
+        const response = await fetch(api_url + 'storage/remove/', {
+            method: 'DELETE',
+            headers: auth_headers,
+            body: data,
+        });
+
+        if (response.ok) {
+            alert('Dodano produkt o ID do wysłania: ' + id)
+        }
+        else {
+            alert('Błąd: nie dodano produktu do wysłania')
         }
     }
 }
