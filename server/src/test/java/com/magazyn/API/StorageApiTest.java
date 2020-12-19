@@ -226,16 +226,19 @@ public class StorageApiTest {
         when(productDataRepository.findById(0)).thenReturn(Optional.of(productData0));
         when(productDataRepository.findById(1)).thenReturn(Optional.of(productData1));
 
-        when(productRepository.findAllByProductData(productData0)).thenReturn(
+        when(productRepository.findAllByProductDataAndState(productData0, State.in_storage)).thenReturn(
                 new ArrayList<>()
         );
         JSONObject response = new JSONObject(storageApi.countProductData(0));
         assertEquals(0, response.getInt("count"));
 
         Product[] products = new Product[10];
-        for (int i = 0; i < products.length; i++)
+        for (int i = 0; i < products.length; i++) {
             products[i] = new Product();
-        when(productRepository.findAllByProductData(productData1)).thenReturn(Arrays.asList(products));
+            products[i].setState(State.in_storage);
+        }
+        when(productRepository.findAllByProductDataAndState(productData1, State.in_storage))
+                .thenReturn(Arrays.asList(products));
 
         response = new JSONObject(storageApi.countProductData(1));
         assertEquals(10, response.getInt("count"));

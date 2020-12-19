@@ -177,7 +177,7 @@ public class StorageApi {
             throw new NoResourceFoundException();
         }
 
-        int count = productRepository.findAllByProductData(product_data.get()).size();
+        int count = productRepository.findAllByProductDataAndState(product_data.get(), State.in_storage).size();
         JSONObject response = new JSONObject();
         response.put("count", count);
         return response.toString();

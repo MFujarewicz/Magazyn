@@ -20,6 +20,7 @@ public interface ProductRepository extends CrudRepository<Product, Integer>{
     public Integer removeProductSafe(Product product, State to_be_taken_enum, State in_storage_enum);
 
     List<Product> findAllByProductData(ProductData productData);
+    List<Product> findAllByProductDataAndState(ProductData productData, State state);
 
     //Add sort by date
     List<Product> findAllByProductDataAndStateOrderByLastModifiedAsc(ProductData productData, State state);
