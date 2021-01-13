@@ -15,15 +15,14 @@ import com.magazyn.database.repositories.ProductRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 public class ProductApi {
@@ -75,15 +74,14 @@ public class ProductApi {
         if (to.before(from))
             throw new IllegalRequestException();
 
-        List<Job> jobs = jobRepository.findAllByDateBeforeOrderByDate(to);
+        List<Job> jobs = jobRepository.findAllByDateBeforeAndDoneOrderByDate(to, true);
         List<Integer> products = new ArrayList<>();
 
         for (Job job : jobs)
-            if (job.isDone())
-                if (job.getJobType() == JobType.take_in)
-                    products.add(job.getProduct().getID());
-                else if (job.getDate().before(from))
-                    products.remove(job.getProduct().getID());
+            if (job.getJobType() == JobType.take_in)
+                products.add(job.getProduct().getID());
+            else if (job.getDate().before(from))
+                products.remove(job.getProduct().getID());
 
         JSONObject response = new JSONObject();
         JSONArray ids = new JSONArray();
@@ -92,4 +90,71 @@ public class ProductApi {
         response.put("products", ids);
         return response.toString();
     }
+
+    @GetMapping("/api/storage/report/{date}")
+    public String getReport(@PathVariable @DateTimeFormat(pattern = "yyyy-MM") Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.set(Calendar.DATE, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date to = c.getTime();
+        List<Job> jobs = jobRepository.findAllByDateBetweenAndDoneOrderByDate(date, to, true);
+        Map<String, Integer> state = new HashMap<>(); // ilosc przedmiotow w magazynie
+        List<Job> amount = jobRepository.findAllByDateBeforeAndDone(date, true);
+        for (Job job : amount) {
+            String name = job.getProduct().getProductData().getName();
+            if (!state.containsKey(name))
+                state.put(name, 0);
+            if (job.getJobType() == JobType.take_in)
+                state.put(name, state.get(name) + 1);
+            else
+                state.put(name, state.get(name) - 1);
+        }
+        Map<String, Map<String, int[]>> data = new HashMap<>();
+
+        for (Job job : jobs) {
+            String name = job.getProduct().getProductData().getName();
+            String simpleDate = new SimpleDateFormat("dd/MM/yyyy").format(job.getDate());
+            if (!data.containsKey(name))
+                data.put(name, new HashMap<>());
+            if (!data.get(name).containsKey(simpleDate))
+                data.get(name).put(simpleDate, new int[]{0, 0, state.containsKey(name) ? state.get(name) : 0});
+            if (!state.containsKey(name))
+                state.put(name, 0);
+
+            if (job.getJobType() == JobType.take_in) {
+                data.get(name).get(simpleDate)[0]++;
+                data.get(name).get(simpleDate)[2]++;
+                state.put(name, state.get(name) + 1);
+            } else {
+                data.get(name).get(simpleDate)[1]++;
+                data.get(name).get(simpleDate)[2]--;
+                state.put(name, state.get(name) - 1);
+            }
+        }
+
+        JSONObject response = new JSONObject();
+        for (String name : data.keySet()) {
+            int sumIN = 0;
+            int sumOUT = 0;
+            JSONObject product = new JSONObject();
+            for (String day : data.get(name).keySet()) {
+                JSONObject dayJSON = new JSONObject();
+                dayJSON.put("in", data.get(name).get(day)[0]);
+                sumIN += data.get(name).get(day)[0];
+                dayJSON.put("out", data.get(name).get(day)[1]);
+                sumOUT += data.get(name).get(day)[1];
+                dayJSON.put("state", data.get(name).get(day)[2]);
+                product.put(day, dayJSON);
+            }
+            JSONObject summary = new JSONObject();
+            summary.put("in", sumIN);
+            summary.put("out", sumOUT);
+            summary.put("state", state.get(name));
+            product.put("summary", summary);
+            response.put(name, product);
+        }
+
+        return response.toString();
+    }
+
 }
