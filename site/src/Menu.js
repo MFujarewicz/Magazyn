@@ -18,11 +18,6 @@ function Menu(props) {
             itemId: '/productList',
           },
           {
-            title: 'Odbierz Produkty',
-            itemId: '/getProduct',
-
-          },
-          {
             title: 'Edytuj',
             itemId: '/add',
 

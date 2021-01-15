@@ -55,7 +55,6 @@ class App extends Component {
 function Page(props) {
   if (props.pageShow === '/productList') return <ProductList keycloak={props.keycloak}/>
   if (props.pageShow === '/map') return <Map />
-  if (props.pageShow === '/getProduct') return <GetProduct />
   if (props.pageShow === '/add/product') return <ProductDataEdit keycloak={props.keycloak} />
   if (props.pageShow === '/add/manufacturer') return <ManufacturerEdit keycloak={props.keycloak} />
   if (props.pageShow === '/add/productType') return <TypeEdit keycloak={props.keycloak} />
@@ -80,14 +79,6 @@ function Map() {
         <div class="Map_info"><div class="square_out"></div><p>Punkt wysyłki produktów</p></div>
         <div class="Map_info"><div class="square_rack"></div><p>Strona szafki, z której można pobrać produkty </p></div>
       </div>
-    </>
-  )
-}
-
-function GetProduct() {
-  return (
-    <>
-      <p>Odbierz produkt</p>
     </>
   )
 }
