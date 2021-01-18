@@ -18,7 +18,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests(authorizeRequests -> authorizeRequests
-        .antMatchers("/**").permitAll()
+//        .antMatchers("/**").permitAll() // wrazie testow odkomentowac
+        .antMatchers("/**/admin/**").hasRole("administrator")
+        .antMatchers("/**/api/job/me/").hasAnyRole("user", "administrator")
+        .antMatchers("/**/api/job/gen").hasAnyRole("user", "administrator")
+        .antMatchers("/**/api/job/confirm").hasAnyRole("user", "administrator")
+        .antMatchers("/**").hasAnyRole("manager", "administrator")
         .anyRequest().authenticated()
         ).oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
 
