@@ -29,6 +29,8 @@ public class Map {
         public int heigth;
     }
 
+    public enum MainPoint{ IN, OUT };
+
     private HashSet<IRack> racks;
     private HashMap<Integer, IRack> racks_ids;
     private HashMap<IRack, CenterPoints> center_points;
@@ -199,13 +201,13 @@ public class Map {
         if (place1 < rack1.numberOfAllocationUnitsPerRow() * rack1.numberOfRows()) {
             //First side
             approx_1 = Math.abs((double)(place1 % rack1.numberOfAllocationUnitsPerRow()) + 0.5 - rack1.numberOfAllocationUnitsPerRow() / 2.0);
-            approx_1 *= rack1.getBounds().getWidth() / (Math.round(rack2.numberOfAllocationUnitsPerRow() / 2) * 2);
+            approx_1 *= rack1.getBounds().getWidth() / (Math.round(rack1.numberOfAllocationUnitsPerRow() / 2) * 2);
             from = createPoint(center_points.get(rack1).first_x, center_points.get(rack1).first_y);
         }
         else if (rack1.isTwoSided() && place1 < 2 * rack1.numberOfAllocationUnitsPerRow() * rack1.numberOfRows()) {
             //Second side
             approx_1 = Math.abs((double)(place1 % rack1.numberOfAllocationUnitsPerRow())  + 0.5 - rack1.numberOfAllocationUnitsPerRow() / 2.0);
-            approx_1 *= rack1.getBounds().getWidth() / (Math.round(rack2.numberOfAllocationUnitsPerRow() / 2) * 2);
+            approx_1 *= rack1.getBounds().getWidth() / (Math.round(rack1.numberOfAllocationUnitsPerRow() / 2) * 2);
             from = createPoint(center_points.get(rack1).second_x, center_points.get(rack1).second_y);
         }
         else {
@@ -229,6 +231,50 @@ public class Map {
         }
 
         return distances.get(new AbstractMap.SimpleEntry<Point, Point>(from, to)) + approx_1 + approx_2;
+    }
+
+    /**
+     * @param rack1_id
+     * @param place1
+     * @param point (in, out) main warehouse point
+     * @return distace beetwen places (-1 id place don't exists)
+     */
+    public double getDistance(int rack1_id, int place1, MainPoint point) {
+        //Distace between center point end place
+        double approx_1;
+        Point from, to = new Point();
+
+        IRack rack1 = racks_ids.get(rack1_id);
+        if (rack1 == null) {
+            return -1.0;
+        }
+
+        if (place1 < rack1.numberOfAllocationUnitsPerRow() * rack1.numberOfRows()) {
+            //First side
+            approx_1 = Math.abs((double)(place1 % rack1.numberOfAllocationUnitsPerRow()) + 0.5 - rack1.numberOfAllocationUnitsPerRow() / 2.0);
+            approx_1 *= rack1.getBounds().getWidth() / (Math.round(rack1.numberOfAllocationUnitsPerRow() / 2) * 2);
+            from = createPoint(center_points.get(rack1).first_x, center_points.get(rack1).first_y);
+        }
+        else if (rack1.isTwoSided() && place1 < 2 * rack1.numberOfAllocationUnitsPerRow() * rack1.numberOfRows()) {
+            //Second side
+            approx_1 = Math.abs((double)(place1 % rack1.numberOfAllocationUnitsPerRow())  + 0.5 - rack1.numberOfAllocationUnitsPerRow() / 2.0);
+            approx_1 *= rack1.getBounds().getWidth() / (Math.round(rack1.numberOfAllocationUnitsPerRow() / 2) * 2);
+            from = createPoint(center_points.get(rack1).second_x, center_points.get(rack1).second_y);
+        }
+        else {
+            return -1.0;
+        }
+
+        if (point == MainPoint.IN) {
+            to.x = (int) ((in_out_points.first_x / getMapSize().width) * (getMapResolution().width));
+            to.y = (int) ((in_out_points.first_y / getMapSize().heigth) * (getMapResolution().heigth));
+        }
+        else {
+            to.x = (int) ((in_out_points.second_x / getMapSize().width) * (getMapResolution().width));
+            to.y = (int) ((in_out_points.second_y / getMapSize().heigth) * (getMapResolution().heigth));
+        }
+
+        return distances.get(new AbstractMap.SimpleEntry<Point, Point>(from, to)) + approx_1;
     }
 
     public List<IRack> getRacks() {

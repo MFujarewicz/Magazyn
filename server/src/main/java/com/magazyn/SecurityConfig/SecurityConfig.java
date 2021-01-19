@@ -18,6 +18,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests(authorizeRequests -> authorizeRequests
+        .antMatchers("/sec_info/**").hasRole("user")
         .antMatchers("/**").permitAll()
         .anyRequest().authenticated()
         ).oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
