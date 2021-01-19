@@ -180,14 +180,14 @@ class TypeEdit extends Component {
         else if (this.state.state === 'show') {
             return (
                 <>
-                <div class="Objects">
-                    <form class="Search">
+                <div className="Objects">
+                    <form className="Search">
                         <label htmlFor="f1name">Nazwa typu:</label>
                         <input type="text" defaultValue={this.name} id="f1name" name="f1name" onChange={e => this.name = e.target.value}></input>
-                        <button type="button" class="search_button" onClick={this.searchButton}>Szukaj</button>
+                        <button type="button" className="search_button" onClick={this.searchButton}>Szukaj</button>
                     </form >
 
-                    <button type="button" class="add_button" onClick={this.addButton}>Dodaj nowy typ</button>
+                    <button type="button" className="add_button" onClick={this.addButton}>Dodaj nowy typ</button>
 
                     <TypeList json={this.state.values} callback={this.editButton}/>
                 </div>
@@ -198,14 +198,14 @@ class TypeEdit extends Component {
             this.new_name = this.state.value.name
             return (
                 <>
-                <div class="Objects">
-                    <button type="button" class="return_button" onClick={this.returnButton}>Powrót</button>
-                    <form class="Edit">
+                <div className="Objects">
+                    <button type="button" className="return_button" onClick={this.returnButton}>Powrót</button>
+                    <form className="Edit">
                         <label htmlFor="f2name">Nowa nazwa typu:</label>
                         <input type="text" defaultValue={this.new_name} id="f2name" name="f2name" onChange={e => this.new_name = e.target.value}></input>
                         <div>
-                            <button type="button" class="save_button" onClick={this.saveButton}>Zapisz</button>
-                            <button type="button" class="delete_button" onClick={this.deleteButton}>Usuń</button>
+                            <button type="button" className="save_button" onClick={this.saveButton}>Zapisz</button>
+                            <button type="button" className="delete_button" onClick={this.deleteButton}>Usuń</button>
                         </div>
                     </form >
                 </div>
@@ -216,12 +216,12 @@ class TypeEdit extends Component {
             this.new_name = ""
             return (
                 <>
-                <div class="Objects">
-                    <button type="button" class="return_button" onClick={this.returnButton}>Powrót</button>
-                    <form class="Edit">
+                <div className="Objects">
+                    <button type="button" className="return_button" onClick={this.returnButton}>Powrót</button>
+                    <form className="Edit">
                         <label htmlFor="f3name">Nazwa typu:</label>
                         <input type="text" defaultValue="" id="f3name" name="f3name" onChange={e => this.new_name = e.target.value}></input>
-                        <div><button type="button" class="save_button" onClick={this.saveNewButton}>Zapisz</button></div>
+                        <div><button type="button" className="save_button" onClick={this.saveNewButton}>Zapisz</button></div>
                     </form >
                 </div>
                 </>
@@ -248,8 +248,8 @@ function TypeList(props) {
 
     for (var type of props.json.types) {
         type_info.push(
-            <div class="SingleObject" key={type.ID}>
-                Nazwa typu: {type.name} <button id={type.ID} type="button" class="edit_button" onClick={e => props.callback(e.target.id)}>Edytuj</button>
+            <div className="SingleObject" key={type.ID}>
+                Nazwa typu: {type.name} <button id={type.ID} type="button" className="edit_button" onClick={e => props.callback(e.target.id)}>Edytuj</button>
             </div>
         );
     }

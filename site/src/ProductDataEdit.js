@@ -219,43 +219,43 @@ class ProductDataEdit extends Component {
         else if (this.state.state === 'show') {
             return (
                 <>
-                <div class="Objects">
-                    <div class="Search">
+                <div className="Objects">
+                    <div className="Search">
                         <div>
-                            <input class="checkbox" defaultChecked={this.checkboxes_state[0]} type="checkbox" onChange={e => this.checkboxes_state[0] = e.target.checked}></input>
+                            <input className="checkbox" defaultChecked={this.checkboxes_state[0]} type="checkbox" onChange={e => this.checkboxes_state[0] = e.target.checked}></input>
                             <label htmlFor="fname">Nazwa produktu:</label>
                             <input type="text" defaultValue={this.name} id="fname" name="fname" onChange={e => this.name = e.target.value}></input>
                         </div>
                         <div>
-                            <input class="checkbox" defaultChecked={this.checkboxes_state[1]} type="checkbox" onChange={e => this.checkboxes_state[1] = e.target.checked}></input>
+                            <input className="checkbox" defaultChecked={this.checkboxes_state[1]} type="checkbox" onChange={e => this.checkboxes_state[1] = e.target.checked}></input>
                             <label htmlFor="fweightmin">Waga minimalna produktu:</label>
                             <input type="number" defaultValue={this.min_weight} id="fweightmin" name="fweightmin" step="0.01" min="0.0" onChange={e => this.min_weight = e.target.value}></input>
                             <label htmlFor="fweightmax">Waga maksymalna produktu:</label>
                             <input type="number" defaultValue={this.max_weight} id="fweightmax" name="fweightmax" step="0.01" min="0.0" onChange={e => this.max_weight = e.target.value}></input>
                         </div>
                         <div>
-                            <input class="checkbox" defaultChecked={this.checkboxes_state[2]} type="checkbox" onChange={e => this.checkboxes_state[2] = e.target.checked}></input>
+                            <input className="checkbox" defaultChecked={this.checkboxes_state[2]} type="checkbox" onChange={e => this.checkboxes_state[2] = e.target.checked}></input>
                             <label htmlFor="fmname">Nazwa producenta:</label>
                             <input type="text" defaultValue={this.man_name} id="fmname" name="fmname" onChange={e => this.man_name = e.target.value}></input>
                         </div>
                         <div>
-                            <input class="checkbox" defaultChecked={this.checkboxes_state[3]} type="checkbox" onChange={e => this.checkboxes_state[3] = e.target.checked}></input>
+                            <input className="checkbox" defaultChecked={this.checkboxes_state[3]} type="checkbox" onChange={e => this.checkboxes_state[3] = e.target.checked}></input>
                             <label htmlFor="ftname">Nazwa typu:</label>
                             <input type="text" defaultValue={this.type_name} id="ftname" name="ftname" onChange={e => this.type_name = e.target.value}></input>
                         </div>
                         <div>
-                            <input class="checkbox" defaultChecked={this.checkboxes_state[4]} type="checkbox" onChange={e => this.checkboxes_state[4] = e.target.checked}></input>
+                            <input className="checkbox" defaultChecked={this.checkboxes_state[4]} type="checkbox" onChange={e => this.checkboxes_state[4] = e.target.checked}></input>
                             <label htmlFor="sort">Sortowanie</label>
                             <select defaultValue={this.sort} name="sort_type" id="sort_type" onChange={e => this.sort = e.target.value}>
                                 <option value="name">Nazwa produktu</option>
                                 <option value="type_name">Nazwa typu</option>
                                 <option value="manufacturer_name">Nazwa producenta</option>
                             </select>
-                            <label htmlFor="sort_rev" class="rev_label">Odwóć wynik</label>
-                            <input name="sort_rev" class="checkbox" defaultChecked={this.rev_print} type="checkbox" onChange={e => this.rev_print = e.target.checked}></input>
+                            <label htmlFor="sort_rev" className="rev_label">Odwóć wynik</label>
+                            <input name="sort_rev" className="checkbox" defaultChecked={this.rev_print} type="checkbox" onChange={e => this.rev_print = e.target.checked}></input>
                         </div>
                         <div>
-                            <button type="button" class="search_button" onClick={this.searchButton}>Szukaj</button>
+                            <button type="button" className="search_button" onClick={this.searchButton}>Szukaj</button>
                         </div>
                     </div >
 
@@ -269,9 +269,9 @@ class ProductDataEdit extends Component {
             this.new_weight = this.state.value.weight
             return (
                 <>
-                <div class="Objects">
-                    <button type="button" class="return_button" onClick={this.returnButton}>Powrót</button>
-                    <form class="Edit">
+                <div className="Objects">
+                    <button type="button" className="return_button" onClick={this.returnButton}>Powrót</button>
+                    <form className="Edit">
                         <div>
                         <label htmlFor="f2name">Nowa nazwa produktu:</label>
                         <input type="text" defaultValue={this.new_name} id="f2name" name="f2name" onChange={e => this.new_name = e.target.value}></input>
@@ -281,8 +281,8 @@ class ProductDataEdit extends Component {
                         <input type="number" defaultValue={this.new_weight} id="f2name" name="f2name" onChange={e => this.new_weight = e.target.value}></input>
                         </div>
                         <div>
-                            <button type="button" class="save_button" onClick={this.saveButton}>Zapisz</button>
-                            <button type="button" class="delete_button" onClick={this.deleteButton}>Usuń</button>
+                            <button type="button" className="save_button" onClick={this.saveButton}>Zapisz</button>
+                            <button type="button" className="delete_button" onClick={this.deleteButton}>Usuń</button>
                         </div>
                     </form>
                 </div>
@@ -325,10 +325,10 @@ function ProductDataList(props) {
 
     for (var product_data of props.json.product_data) {
         product_data_info.push(
-            <div class="SingleObject" key={product_data.ID}>
-                <div>Nazwa Produktu: {product_data.name} waga: {product_data.weight} <button id={product_data.ID} type="button" class="edit_button" onClick={e => props.callback(e.target.id)}>Edytuj</button></div>
-                <div>Nazwa Typu: {product_data.type.name}  <button id={product_data.ID} type="button" class="edit_button" >Edytuj</button></div>
-                <div>Nazwa Producenta: {product_data.manufacturer.name} <button id={product_data.ID} type="button" class="edit_button" >Edytuj</button></div>
+            <div className="SingleObject" key={product_data.ID}>
+                <div>Nazwa Produktu: {product_data.name} waga: {product_data.weight} <button id={product_data.ID} type="button" className="edit_button" onClick={e => props.callback(e.target.id)}>Edytuj</button></div>
+                <div>Nazwa Typu: {product_data.type.name}  <button id={product_data.ID} type="button" className="edit_button" >Edytuj</button></div>
+                <div>Nazwa Producenta: {product_data.manufacturer.name} <button id={product_data.ID} type="button" className="edit_button" >Edytuj</button></div>
             </div>
         );
     }

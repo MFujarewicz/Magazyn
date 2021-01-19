@@ -100,43 +100,43 @@ export class ProductList extends Component {
         if (this.state.ready) {
             return (
                 <>
-                    <div class="ProductList">
-                        <div class="ProductSearch">
+                    <div className="ProductList">
+                        <div className="ProductSearch">
                             <div>
-                                <input class="checkbox" defaultChecked={this.checkboxes_state[0]} type="checkbox" onChange={e => this.checkboxes_state[0] = e.target.checked}></input>
+                                <input className="checkbox" defaultChecked={this.checkboxes_state[0]} type="checkbox" onChange={e => this.checkboxes_state[0] = e.target.checked}></input>
                                 <label htmlFor="fname">Nazwa produktu:</label>
                                 <input type="text" defaultValue={this.name} id="fname" name="fname" onChange={e => this.name = e.target.value}></input>
                             </div>
                             <div>
-                                <input class="checkbox" defaultChecked={this.checkboxes_state[1]} type="checkbox" onChange={e => this.checkboxes_state[1] = e.target.checked}></input>
+                                <input className="checkbox" defaultChecked={this.checkboxes_state[1]} type="checkbox" onChange={e => this.checkboxes_state[1] = e.target.checked}></input>
                                 <label htmlFor="fweightmin">Waga minimalna produktu:</label>
                                 <input type="number" defaultValue={this.min_weight} id="fweightmin" name="fweightmin" step="0.01" min="0.0" onChange={e => this.min_weight = e.target.value}></input>
                                 <label htmlFor="fweightmax">Waga maksymalna produktu:</label>
                                 <input type="number" defaultValue={this.max_weight} id="fweightmax" name="fweightmax" step="0.01" min="0.0" onChange={e => this.max_weight = e.target.value}></input>
                             </div>
                             <div>
-                                <input class="checkbox" defaultChecked={this.checkboxes_state[2]} type="checkbox" onChange={e => this.checkboxes_state[2] = e.target.checked}></input>
+                                <input className="checkbox" defaultChecked={this.checkboxes_state[2]} type="checkbox" onChange={e => this.checkboxes_state[2] = e.target.checked}></input>
                                 <label htmlFor="fmname">Nazwa producenta:</label>
                                 <input type="text" defaultValue={this.man_name} id="fmname" name="fmname" onChange={e => this.man_name = e.target.value}></input>
                             </div>
                             <div>
-                                <input class="checkbox" defaultChecked={this.checkboxes_state[3]} type="checkbox" onChange={e => this.checkboxes_state[3] = e.target.checked}></input>
+                                <input className="checkbox" defaultChecked={this.checkboxes_state[3]} type="checkbox" onChange={e => this.checkboxes_state[3] = e.target.checked}></input>
                                 <label htmlFor="ftname">Nazwa typu:</label>
                                 <input type="text" defaultValue={this.type_name} id="ftname" name="ftname" onChange={e => this.type_name = e.target.value}></input>
                             </div>
                             <div>
-                                <input class="checkbox" defaultChecked={this.checkboxes_state[4]} type="checkbox" onChange={e => this.checkboxes_state[4] = e.target.checked}></input>
+                                <input className="checkbox" defaultChecked={this.checkboxes_state[4]} type="checkbox" onChange={e => this.checkboxes_state[4] = e.target.checked}></input>
                                 <label htmlFor="sort">Sortowanie</label>
                                 <select defaultValue={this.sort} name="sort_type" id="sort_type" onChange={e => this.sort = e.target.value}>
                                     <option value="name">Nazwa produktu</option>
                                     <option value="type_name">Nazwa typu</option>
                                     <option value="manufacturer_name">Nazwa producenta</option>
                                 </select>
-                                <label htmlFor="sort_rev" class="rev_label">Odwóć wynik</label>
-                                <input name="sort_rev" class="checkbox" defaultChecked={this.rev_print} type="checkbox" onChange={e => this.rev_print = e.target.checked}></input>
+                                <label htmlFor="sort_rev" className="rev_label">Odwóć wynik</label>
+                                <input name="sort_rev" className="checkbox" defaultChecked={this.rev_print} type="checkbox" onChange={e => this.rev_print = e.target.checked}></input>
                             </div>
                             <div>
-                                <button type="button" class="button" onClick={this.searchButton}>Szukaj</button>
+                                <button type="button" className="button" onClick={this.searchButton}>Szukaj</button>
                             </div>
                         </div >
 
@@ -163,7 +163,7 @@ function ProductListShow(props) {
     }
 
     return (
-        <table class="ProductListTable">
+        <table className="ProductListTable">
             <thead>
                 <tr>
                     <th>Nazwa</th>
