@@ -17,7 +17,7 @@ export class ProductList extends Component {
     rev_print = false;
 
     quey = "";
-    quey_data= "";
+    quey_data = "";
     checkboxes_state = [false, false, false, false, false];
 
     constructor(props) {
@@ -141,7 +141,7 @@ export class ProductList extends Component {
                         </div >
 
 
-                        <ProductListShow data={this.state.data} auth_headers={this.auth_headers} api_url={this.api_url} rev_print={this.rev_print}/>
+                        <ProductListShow data={this.state.data} auth_headers={this.auth_headers} api_url={this.api_url} rev_print={this.rev_print} />
                     </div>
                 </>
             )

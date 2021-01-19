@@ -13,7 +13,7 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { keycloak: null, authenticated: false, pageShown: "/productList" };
+    this.state = { keycloak: null, authenticated: false, pageShown: "/splashScreen" };
     this.handler = this.handler.bind(this)
   }
 
@@ -36,7 +36,7 @@ class App extends Component {
       if (this.state.authenticated) return (
         <>
           <div className="App">
-            <div className='Menu'><Menu handler={this.handler} /></div>
+            <div className='Menu'><Menu handler={this.handler} roles={this.state.keycloak.tokenParsed.resource_access.Warehouse.roles} /></div>
             <Page pageShow={this.state.pageShown} logout={this.state.keycloak.logout} keycloak={this.state.keycloak} />
           </div>
         </>
@@ -53,6 +53,7 @@ class App extends Component {
 
 
 function Page(props) {
+  if (props.pageShow === '/splashScreen') return <SplashScreen keycloak={props.keycloak}/>
   if (props.pageShow === '/productList') return <ProductList keycloak={props.keycloak}/>
   if (props.pageShow === '/map') return <Map />
   if (props.pageShow === '/add/product') return <ProductDataEdit keycloak={props.keycloak} />
@@ -75,18 +76,19 @@ function Map() {
     <>
       <div className="Map">
         <img src="http://127.0.0.1/map.png" alt="Mapa" />
-        <div class="Map_info"><div class="square_in"></div><p>Punkt odbioru produktów</p></div>
-        <div class="Map_info"><div class="square_out"></div><p>Punkt wysyłki produktów</p></div>
-        <div class="Map_info"><div class="square_rack"></div><p>Strona szafki, z której można pobrać produkty </p></div>
+        <div className="Map_info"><div className="square_in"></div><p>Punkt odbioru produktów</p></div>
+        <div className="Map_info"><div className="square_out"></div><p>Punkt wysyłki produktów</p></div>
+        <div className="Map_info"><div className="square_rack"></div><p>Strona szafki, z której można pobrać produkty </p></div>
       </div>
     </>
   )
 }
 
-function AddProduct() {
+function SplashScreen(props){
+  var username = props.keycloak.tokenParsed.preferred_username
   return (
     <>
-      <p>Dodaj produkt</p>
+      <p> Witaj {username}! </p>
     </>
   )
 }
