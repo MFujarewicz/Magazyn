@@ -2,8 +2,8 @@ package com.magazyn.ServerConfig;
 
 import com.magazyn.Storage.IPathGenerator;
 import com.magazyn.Storage.JobGenerator;
-import com.magazyn.Storage.SimplePathGenerator;
 import com.magazyn.Storage.StorageManager;
+import com.magazyn.Storage.TabuSearchPathGenerator;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ public class StorageConfiguration {
 
     @Bean
     public IPathGenerator getDefaultPathGenerator() {
-        return new SimplePathGenerator();
+        return new TabuSearchPathGenerator();
     }
 
     @Bean

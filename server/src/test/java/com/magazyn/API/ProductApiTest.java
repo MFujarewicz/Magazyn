@@ -11,7 +11,6 @@ import com.magazyn.State;
 import com.magazyn.database.*;
 import com.magazyn.database.repositories.JobRepository;
 import com.magazyn.database.repositories.ProductRepository;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;

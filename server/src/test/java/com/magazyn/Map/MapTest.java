@@ -64,6 +64,9 @@ public class MapTest {
 
         assertEquals(10.0 + 3.0, map.getDistance(3, 10, 3, 115), 0.1);
 
+        assertTrue(6.0 + 5.0 > map.getDistance(5, 0, Map.MainPoint.OUT));
+        assertTrue(1.0 + 6.0 + 5.0 > map.getDistance(1, 0, Map.MainPoint.IN));
+
         double distance = map.getDistance(41, 1, 30, 84);
         assertTrue(distance > 20);
         assertTrue(distance < 34);

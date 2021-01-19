@@ -7,6 +7,7 @@ import java.util.Random;
 
 import com.magazyn.JobType;
 import com.magazyn.State;
+import com.magazyn.Map.Map;
 import com.magazyn.database.Job;
 import com.magazyn.database.Product;
 import com.magazyn.database.repositories.JobRepository;
@@ -23,6 +24,8 @@ public class JobGenerator {
     ProductRepository product_repository;
     @Autowired
     IPathGenerator path_generator;
+    @Autowired 
+    Map map;
 
     @Autowired
     @Qualifier("max_weight")
@@ -46,20 +49,20 @@ public class JobGenerator {
 
         if (combine_jobs || rand) {
             List<Product> in_products = generateStoreJob(employee_id);
-            List<Product> in_products_sorted = path_generator.generatePath(in_products);
 
-            for (Product product : in_products_sorted) {
+            for (Product product : in_products) {
                 products.add(new AbstractMap.SimpleEntry<>(product, JobType.take_in));
             }
         }
         if (combine_jobs || !rand) {
-            List<Product> in_products = generateTakeJob(employee_id);
-            List<Product> in_products_sorted = path_generator.generatePath(in_products);
+            List<Product> out_products = generateTakeJob(employee_id);
 
-            for (Product product : in_products_sorted) {
+            for (Product product : out_products) {
                 products.add(new AbstractMap.SimpleEntry<>(product, JobType.take_out));
             }
         }
+
+        products = path_generator.generatePath(products, map, max_weight);
 
         return products;
     }
