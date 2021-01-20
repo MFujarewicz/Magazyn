@@ -26,7 +26,7 @@ class ProductDataEdit extends Component {
         super(props);
         this.state = { ready: true, keycloak: props.keycloak, state: "show", shearch_id: 0};
 
-        this.api_url = "http://127.0.0.1/api/";
+        this.api_url = "https://127.0.0.1/api/";
         this.in_progres = false;
 
         this.auth_headers.append('Content-Type', 'application/x-www-form-urlencoded');

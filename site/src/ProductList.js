@@ -23,7 +23,7 @@ export class ProductList extends Component {
     constructor(props) {
         super(props);
         this.state = { ready: false, keycloak: props.keycloak, state: "" };
-        this.api_url = "http://127.0.0.1/api/";
+        this.api_url = "https://127.0.0.1/api/";
         this.auth_headers.append('Content-Type', 'application/x-www-form-urlencoded');
         this.auth_headers.append('Authorization', 'bearer ' + this.state.keycloak.token);
 
@@ -98,6 +98,14 @@ export class ProductList extends Component {
         }
 
         if (this.state.ready) {
+            if (this.state.state === "error") {
+                return (
+                    <>
+                        <p>Erorr</p>
+                    </>
+                );
+            }
+
             return (
                 <>
                     <div class="ProductList">

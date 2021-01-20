@@ -13,7 +13,7 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { keycloak: null, authenticated: false, pageShown: "/productList" };
+    this.state = { keycloak: null, authenticated: false, pageShown: "/home" };
     this.handler = this.handler.bind(this)
   }
 
@@ -36,7 +36,7 @@ class App extends Component {
       if (this.state.authenticated) return (
         <>
           <div className="App">
-            <div className='Menu'><Menu handler={this.handler} /></div>
+            <div className='Menu'><Menu handler={this.handler} roles={this.state.keycloak.resourceAccess.Warehouse.roles}/></div>
             <Page pageShow={this.state.pageShown} logout={this.state.keycloak.logout} keycloak={this.state.keycloak} />
           </div>
         </>
@@ -55,6 +55,7 @@ class App extends Component {
 function Page(props) {
   if (props.pageShow === '/productList') return <ProductList keycloak={props.keycloak}/>
   if (props.pageShow === '/map') return <Map />
+  if (props.pageShow === '/home') return <Home />
   if (props.pageShow === '/add/product') return <ProductDataEdit keycloak={props.keycloak} />
   if (props.pageShow === '/add/manufacturer') return <ManufacturerEdit keycloak={props.keycloak} />
   if (props.pageShow === '/add/productType') return <TypeEdit keycloak={props.keycloak} />
@@ -71,13 +72,25 @@ function Logout(props) {
 
 function Map() {
   //Change to API URL
+  //Change request with token
   return (
     <>
       <div className="Map">
-        <img src="http://127.0.0.1/map.png" alt="Mapa" />
+        <img src="https://127.0.0.1/map.png" alt="Mapa" />
         <div class="Map_info"><div class="square_in"></div><p>Punkt odbioru produktów</p></div>
         <div class="Map_info"><div class="square_out"></div><p>Punkt wysyłki produktów</p></div>
         <div class="Map_info"><div class="square_rack"></div><p>Strona szafki, z której można pobrać produkty </p></div>
+      </div>
+    </>
+  )
+}
+
+function Home() {
+  //Change to API URL
+  return (
+    <>
+      <div className="Home">
+        <img src="https://127.0.0.1/home.svg" alt="Home" />
       </div>
     </>
   )
