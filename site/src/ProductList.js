@@ -23,7 +23,7 @@ export class ProductList extends Component {
     constructor(props) {
         super(props);
         this.state = { ready: false, keycloak: props.keycloak, state: "" };
-        this.api_url = "http://127.0.0.1/api/";
+        this.api_url = "https://127.0.0.1/api/";
         this.auth_headers.append('Content-Type', 'application/x-www-form-urlencoded');
         this.auth_headers.append('Authorization', 'bearer ' + this.state.keycloak.token);
 
@@ -98,6 +98,14 @@ export class ProductList extends Component {
         }
 
         if (this.state.ready) {
+            if (this.state.state === "error") {
+                return (
+                    <>
+                        <p>Erorr</p>
+                    </>
+                );
+            }
+
             return (
                 <>
                     <div className="ProductList">
@@ -173,6 +181,7 @@ function ProductListShow(props) {
                     <th>Typ</th>
                     <th>Dodaj do magazynu</th>
                     <th>Dodaj do wysłania</th>
+                    <th>Ilość</th>
                 </tr>
             </thead>
             <tbody>
@@ -193,6 +202,7 @@ function ProductRow(props) {
             <td>{props.product.type.name}  </td>
             <td className='button' onClick={addProduct(props.product.ID, 1, props.api_url, props.auth_headers)}>Dodaj</td>
             <td className='button' onClick={removeProduct(props.product.ID, 1, props.api_url, props.auth_headers)}>Dodaj</td>
+            <td className='check_button' onClick={checkProduct(props.product.ID, props.api_url, props.auth_headers)}>Sprawdź</td>
         </tr>
 
     )
@@ -234,6 +244,26 @@ function removeProduct(id, amount, api_url, auth_headers) {
         }
         else {
             alert('Błąd: nie dodano produktu do wysłania')
+        }
+    }
+}
+
+function checkProduct(id, api_url, auth_headers) {
+    return async function () {
+
+        var data = new URLSearchParams()
+        const response = await fetch(api_url + 'storage/product_info/count/' + id, {
+            method: 'GET',
+            headers: auth_headers,
+        });
+
+        if (response.ok) {
+            const json = await response.json();
+
+            alert('W magazynie: ' + json.count_stored + '\nOczekuje na wniesienie: ' + + json.count_in + '\nOczekuje na wyniesienie: ' + + json.count_out)
+        }
+        else {
+            alert('Błąd')
         }
     }
 }

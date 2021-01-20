@@ -13,7 +13,7 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { keycloak: null, authenticated: false, pageShown: "/splashScreen" };
+    this.state = { keycloak: null, authenticated: false, pageShown: "/home" };
     this.handler = this.handler.bind(this)
   }
 
@@ -36,7 +36,7 @@ class App extends Component {
       if (this.state.authenticated) return (
         <>
           <div className="App">
-            <div className='Menu'><Menu handler={this.handler} roles={this.state.keycloak.tokenParsed.resource_access.Warehouse.roles} /></div>
+            <div className='Menu'><Menu handler={this.handler} roles={this.state.keycloak.tokenParsed.resource_access.Warehouse.roles} name={this.state.keycloak.tokenParsed.preferred_username} /></div>
             <Page pageShow={this.state.pageShown} logout={this.state.keycloak.logout} keycloak={this.state.keycloak} />
           </div>
         </>
@@ -53,9 +53,9 @@ class App extends Component {
 
 
 function Page(props) {
-  if (props.pageShow === '/splashScreen') return <SplashScreen keycloak={props.keycloak}/>
   if (props.pageShow === '/productList') return <ProductList keycloak={props.keycloak}/>
   if (props.pageShow === '/map') return <Map />
+  if (props.pageShow === '/home') return <Home keycloak={props.keycloak}/>
   if (props.pageShow === '/add/product') return <ProductDataEdit keycloak={props.keycloak} />
   if (props.pageShow === '/add/manufacturer') return <ManufacturerEdit keycloak={props.keycloak} />
   if (props.pageShow === '/add/productType') return <TypeEdit keycloak={props.keycloak} />
@@ -72,10 +72,11 @@ function Logout(props) {
 
 function Map() {
   //Change to API URL
+  //Change request with token
   return (
     <>
       <div className="Map">
-        <img src="http://127.0.0.1/map.png" alt="Mapa" />
+        <img src="https://127.0.0.1/map.png" alt="Mapa" />
         <div className="Map_info"><div className="square_in"></div><p>Punkt odbioru produktów</p></div>
         <div className="Map_info"><div className="square_out"></div><p>Punkt wysyłki produktów</p></div>
         <div className="Map_info"><div className="square_rack"></div><p>Strona szafki, z której można pobrać produkty </p></div>
@@ -84,11 +85,13 @@ function Map() {
   )
 }
 
-function SplashScreen(props){
-  var username = props.keycloak.tokenParsed.preferred_username
+function Home(props) {
+  //Change to API URL
   return (
     <>
-      <p> Witaj {username}! </p>
+      <div className="Home">
+        <img src="https://127.0.0.1/home.svg" alt="Home" />
+      </div>
     </>
   )
 }

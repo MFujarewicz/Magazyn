@@ -229,8 +229,16 @@ public class StorageApiTest {
         when(productRepository.findAllByProductDataAndState(productData0, State.in_storage)).thenReturn(
                 new ArrayList<>()
         );
+        when(productRepository.findAllByProductDataAndState(productData0, State.to_be_stored)).thenReturn(
+                new ArrayList<>()
+        );
+        when(productRepository.findAllByProductDataAndState(productData0, State.to_be_taken)).thenReturn(
+                new ArrayList<>()
+        );
         JSONObject response = new JSONObject(storageApi.countProductData(0));
-        assertEquals(0, response.getInt("count"));
+        assertEquals(0, response.getInt("count_stored"));
+        assertEquals(0, response.getInt("count_in"));
+        assertEquals(0, response.getInt("count_out"));
 
         Product[] products = new Product[10];
         for (int i = 0; i < products.length; i++) {
@@ -239,9 +247,15 @@ public class StorageApiTest {
         }
         when(productRepository.findAllByProductDataAndState(productData1, State.in_storage))
                 .thenReturn(Arrays.asList(products));
+        when(productRepository.findAllByProductDataAndState(productData1, State.to_be_stored))
+                .thenReturn(Arrays.asList(new Product[2]));
+        when(productRepository.findAllByProductDataAndState(productData1, State.to_be_taken))
+                .thenReturn(Arrays.asList(new Product[4]));
 
         response = new JSONObject(storageApi.countProductData(1));
-        assertEquals(10, response.getInt("count"));
+        assertEquals(10, response.getInt("count_stored"));
+        assertEquals(2, response.getInt("count_in"));
+        assertEquals(4, response.getInt("count_out"));
     }
 
     @Test

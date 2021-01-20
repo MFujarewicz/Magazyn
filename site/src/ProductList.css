@@ -6,11 +6,27 @@
     padding-right: 30px;
 }
 
+.check_button {
+    background: #a8deff;
+    cursor: pointer;
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
 .button:hover{
     background: lightskyblue;
 }
 
 .button:active {
+    background:#43a0d9;
+}
+
+.check_button:hover{
+    background: lightskyblue;
+}
+
+.check_button:active {
     background:#43a0d9;
 }
 

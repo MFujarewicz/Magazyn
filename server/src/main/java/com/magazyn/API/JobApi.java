@@ -1,11 +1,11 @@
 package com.magazyn.API;
 
-import com.magazyn.JobType;
-import com.magazyn.State;
 import com.magazyn.API.exceptions.AlreadyDoneException;
 import com.magazyn.API.exceptions.IllegalRequestException;
 import com.magazyn.API.exceptions.NoEndPointException;
 import com.magazyn.API.exceptions.NoJobAssigned;
+import com.magazyn.JobType;
+import com.magazyn.State;
 import com.magazyn.Storage.JobGenerator;
 import com.magazyn.database.Job;
 import com.magazyn.database.Product;
@@ -13,20 +13,20 @@ import com.magazyn.database.ProductLocation;
 import com.magazyn.database.repositories.JobRepository;
 import com.magazyn.database.repositories.ProductLocationRepository;
 import com.magazyn.database.repositories.ProductRepository;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
-
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 public class JobApi {
@@ -85,7 +85,6 @@ public class JobApi {
         return response.toString();
     }
 
-    @Secured("ROLE_user")
     @GetMapping("/api/job/me/")
     public String getProductsByAssignedMe() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -123,7 +122,6 @@ public class JobApi {
         }
     }
 
-    @Secured("ROLE_user")
     @PutMapping("/api/job/gen")
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
