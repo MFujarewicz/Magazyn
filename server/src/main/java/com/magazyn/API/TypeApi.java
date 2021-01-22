@@ -77,7 +77,7 @@ public class TypeApi {
     @GetMapping("/api/type/name/{name}")
     public String getTypesByName(@PathVariable String name) {
         try {
-            name = new String(Base64.getUrlDecoder().decode(name.getBytes(StandardCharsets.UTF_8)));
+            name = new String(Base64.getUrlDecoder().decode(name.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
         } catch (Exception exception) {
             throw new IllegalRequestException();
         }

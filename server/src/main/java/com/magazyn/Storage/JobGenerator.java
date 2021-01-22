@@ -77,7 +77,7 @@ public class JobGenerator {
             double total_weight = job_weight + product.getProductData().getWeight();
 
             if (total_weight > max_weight) {
-                break;
+                continue;
             }
 
             if (tryAquire(product, JobType.take_in, employee_id)) {
@@ -99,7 +99,7 @@ public class JobGenerator {
             double total_weight = job_weight + product.getProductData().getWeight();
 
             if (total_weight > max_weight) {
-                break;
+                continue;
             }
 
             if (tryAquire(product, JobType.take_out, employee_id)) {

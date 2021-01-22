@@ -92,7 +92,7 @@ public class ProductDataApi {
         List<ProductData> products_data = null;
 
         try {
-            query_args = new String(Base64.getUrlDecoder().decode(query_args.getBytes(StandardCharsets.UTF_8)));
+            query_args = new String(Base64.getUrlDecoder().decode(query_args.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
             products_data = product_data_repository.buildQuery(query_args, allRequestParams);
         } catch (Exception exception) {
             throw new IllegalRequestException();

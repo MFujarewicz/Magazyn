@@ -61,7 +61,7 @@ class ManufacturerEdit extends Component {
 
     async getManufacturers(name) {
         try {
-            const response = await fetch(this.api_url + 'manufacturer/name/' + base64url(name), {
+            const response = await fetch(this.api_url + 'manufacturer/name/' + base64url(name, "utf8"), {
                 method: 'GET',
                 headers: this.auth_headers
             });
@@ -205,7 +205,6 @@ class ManufacturerEdit extends Component {
                         <input type="text" defaultValue={this.new_name} id="f2name" name="f2name" onChange={e => this.new_name = e.target.value}></input>
                         <div>
                             <button type="button" className="save_button" onClick={this.saveButton}>Zapisz</button>
-                            <button type="button" className="delete_button" onClick={this.deleteButton}>Usuń</button>
                         </div>
                     </form >
                 </div>

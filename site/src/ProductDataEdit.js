@@ -2,6 +2,7 @@ import './Edit.css';
 
 import React, { Component } from 'react'
 import base64url from "base64url";
+import SelectSearch from 'react-select-search';
 
 class ProductDataEdit extends Component {
     api_url = "";
@@ -18,13 +19,15 @@ class ProductDataEdit extends Component {
 
     new_name = ""
     new_weight = 0.0
+    new_type = 0
+    new_man = 0
     quey = "";
     quey_data= "";
     checkboxes_state = [false, false, false, false, false];
 
     constructor(props) {
         super(props);
-        this.state = { ready: true, keycloak: props.keycloak, state: "show", shearch_id: 0};
+        this.state = { ready: true, keycloak: props.keycloak, state: "show", shearch_id: 0, edit_ready_1: false, edit_ready_2: false };
 
         this.api_url = "https://127.0.0.1/api/";
         this.in_progres = false;
@@ -80,7 +83,7 @@ class ProductDataEdit extends Component {
     }
 
     saveButton() {
-        this.updateProductData1(this.state.shearch_id, this.new_name, this.new_weight);
+        this.updateProductData1(this.state.shearch_id, this.new_name, this.new_weight, this.new_type, this.new_man);
     }
 
     deleteButton() {
@@ -88,7 +91,7 @@ class ProductDataEdit extends Component {
     }
 
     saveNewButton() {
-        this.addManufacturer(this.new_name);
+        this.addProductData(this.new_name, this.new_weight, this.new_type, this.new_man);
     }
 
     returnButton() {
@@ -132,9 +135,9 @@ class ProductDataEdit extends Component {
         }
     };
 
-    async updateProductData1(id, name, weight) {
+    async updateProductData1(id, name, weight, type, manufacturer) {
         try {
-            const data = "name=" + encodeURI(name) + "&weight=" + weight;
+            const data = "name=" + encodeURI(name) + "&weight=" + weight + "&type=" + type + "&manufacturer=" + manufacturer;
 
             const response = await fetch(this.api_url + 'product_data/id/' + id, {
                 method: 'PUT',
@@ -155,11 +158,11 @@ class ProductDataEdit extends Component {
         }
     };
 
-    async addManufacturer(name) {
+    async addProductData(name, weight, type, manufacturer) {
         try {
-            const data = "name=" + name;
+            const data = "name=" + encodeURI(name) + "&weight=" + weight + "&type=" + type + "&manufacturer=" + manufacturer;
 
-            const response = await fetch(this.api_url + 'manufacturer/add/', {
+            const response = await fetch(this.api_url + 'product_data/add/', {
                 method: 'PUT',
                 headers: this.auth_headers,
                 body: data
@@ -198,6 +201,44 @@ class ProductDataEdit extends Component {
         }
     };
 
+    async getAllTypes() {
+        try {
+            const response = await fetch(this.api_url + 'type/all/', {
+                method: 'GET',
+                headers: this.auth_headers,
+            });
+            if (response.status !== 200) {
+                console.log("err");
+                this.setState({ ready: true, state: "error" });
+            } else {
+                const json = await response.json();
+                this.setState({ edit_ready_1: true, types: json });
+            }
+        } catch (error) {
+            console.log(error);
+            this.setState({ ready: true, state: "error" });
+        }
+    };
+
+    async getAllManufacturers() {
+        try {
+            const response = await fetch(this.api_url + 'manufacturer/all/', {
+                method: 'GET',
+                headers: this.auth_headers,
+            });
+            if (response.status !== 200) {
+                console.log("err");
+                this.setState({ ready: true, state: "error" });
+            } else {
+                const json = await response.json();
+                this.setState({ edit_ready_2: true, manufacturers: json });
+            }
+        } catch (error) {
+            console.log(error);
+            this.setState({ ready: true, state: "error" });
+        }
+    };
+
     
     render() {
         if (!this.state.ready && this.in_progres) {
@@ -213,6 +254,7 @@ class ProductDataEdit extends Component {
         if (!this.state.ready) {
             return (
                 <>
+                    <p>Proszę czekać</p>
                 </>
             );
         }
@@ -259,51 +301,122 @@ class ProductDataEdit extends Component {
                         </div>
                     </div >
 
+                    <button type="button" className="add_button" onClick={this.addButton}>Dodaj nowy typ</button>
                     <ProductDataList json={this.state.values} callback={this.editButton} rev_print={this.rev_print}/>
                 </div>
                 </>
             );
         }
         else if (this.state.state === 'edit') {
-            this.new_name = this.state.value.name
-            this.new_weight = this.state.value.weight
-            return (
-                <>
-                <div className="Objects">
-                    <button type="button" className="return_button" onClick={this.returnButton}>Powrót</button>
-                    <form className="Edit">
-                        <div>
-                        <label htmlFor="f2name">Nowa nazwa produktu:</label>
-                        <input type="text" defaultValue={this.new_name} id="f2name" name="f2name" onChange={e => this.new_name = e.target.value}></input>
-                        </div>
-                        <div>
-                        <label htmlFor="f2name">Nowa waga produktu:</label>
-                        <input type="number" defaultValue={this.new_weight} id="f2name" name="f2name" onChange={e => this.new_weight = e.target.value}></input>
-                        </div>
-                        <div>
-                            <button type="button" className="save_button" onClick={this.saveButton}>Zapisz</button>
-                            <button type="button" className="delete_button" onClick={this.deleteButton}>Usuń</button>
-                        </div>
-                    </form>
-                </div>
-                </>
-            );
-        }/*
+            if (this.state.edit_ready_1 && this.state.edit_ready_2) {
+                var types = [];
+                var mans = [];
+                for (var data of this.state.types.types) {
+                    types.push({name: data.name, value: data.ID})
+                }
+                for (var data2 of this.state.manufacturers.manufacturers) {
+                    mans.push({name: data2.name, value: data2.ID})
+                }
+                this.new_name = this.state.value.name
+                this.new_weight = this.state.value.weight
+                this.new_type = this.state.value.type.ID
+                this.new_man = this.state.value.manufacturer.ID
+                return (
+                    <>
+                    <div className="Objects">
+                        <button type="button" className="return_button" onClick={this.returnButton}>Powrót</button>
+                        <form className="Edit">
+                            <div>
+                            <label htmlFor="fname">Nowa nazwa produktu:</label>
+                            <input type="text" defaultValue={this.new_name} id="fname" name="fname" onChange={e => this.new_name = e.target.value}></input>
+                            </div>
+                            <div>
+                            <label htmlFor="fweight">Nowa waga produktu:</label>
+                            <input type="number" defaultValue={this.new_weight} id="fweight" name="fweight" onChange={e => this.new_weight = e.target.value}></input>
+                            </div>
+                            <div>
+                            <label htmlFor="ftype">Nowy typ produktu:</label>
+                            <SelectSearch id="ftype" name="ftype" options={types} search value={this.new_type} onChange={e => this.new_type = e}/>
+                            </div>
+                            <div>
+                            <label htmlFor="fman">Nowy typ produktu:</label>
+                            <SelectSearch id="fman" name="fman" options={mans} search value={this.new_man} onChange={e => this.new_man = e}/>
+                            </div>
+                            <div>
+                                <button type="button" className="save_button" onClick={this.saveButton}>Zapisz</button>
+                            </div>
+                        </form>
+                    </div>
+                    </>
+                );
+            }
+            else {
+                if (!this.state.edit_ready_1 || !this.state.edit_ready_2) {
+                    this.getAllTypes();
+                    this.getAllManufacturers();
+                }
+                return (
+                    <>
+                    <p>Proszę czekać</p>
+                    </>
+                );
+            }
+        }
         else if (this.state.state === 'add') {
-            this.new_name = ""
-            return (
-                <>
-                <div class="Objects">
-                    <button type="button" class="return_button" onClick={this.returnButton}>Powrót</button>
-                    <form class="Edit">
-                        <label htmlFor="f3name">Nazwa producenta:</label>
-                        <input type="text" defaultValue="" id="f3name" name="f3name" onChange={e => this.new_name = e.target.value}></input>
-                        <div><button type="button" class="save_button" onClick={this.saveNewButton}>Zapisz</button></div>
-                    </form >
-                </div>
-                </>
-            );
-        }*/
+            if (this.state.edit_ready_1 && this.state.edit_ready_2) {
+                var types_e = [];
+                var mans_e = [];
+                for (var data3 of this.state.types.types) {
+                    types_e.push({name: data3.name, value: data3.ID})
+                }
+                for (var data4 of this.state.manufacturers.manufacturers) {
+                    mans_e.push({name: data4.name, value: data4.ID})
+                }
+                this.new_name = "name"
+                this.new_weight = 1.0
+                this.new_type = types_e[0].value
+                this.new_man = mans_e[0].value
+                return (
+                    <>
+                    <div className="Objects">
+                        <button type="button" className="return_button" onClick={this.returnButton}>Powrót</button>
+                        <form className="Edit">
+                            <div>
+                            <label htmlFor="fname">Nowa nazwa produktu:</label>
+                            <input type="text" defaultValue={this.new_name} id="fname" name="fname" onChange={e => this.new_name = e.target.value}></input>
+                            </div>
+                            <div>
+                            <label htmlFor="fweight">Nowa waga produktu:</label>
+                            <input type="number" defaultValue={this.new_weight} id="fweight" name="fweight" onChange={e => this.new_weight = e.target.value}></input>
+                            </div>
+                            <div>
+                            <label htmlFor="ftype">Nowy typ produktu:</label>
+                            <SelectSearch id="ftype" name="ftype" options={types_e} search value={this.new_type} onChange={e => this.new_type = e}/>
+                            </div>
+                            <div>
+                            <label htmlFor="fman">Nowy typ produktu:</label>
+                            <SelectSearch id="fman" name="fman" options={mans_e} search value={this.new_man} onChange={e => this.new_man = e}/>
+                            </div>
+                            <div>
+                                <button type="button" className="save_button" onClick={this.saveNewButton}>Zapisz</button>
+                            </div>
+                        </form>
+                    </div>
+                    </>
+                );
+            }
+            else {
+                if (!this.state.edit_ready_1 || !this.state.edit_ready_2) {
+                    this.getAllTypes();
+                    this.getAllManufacturers();
+                }
+                return (
+                    <>
+                    <p>Proszę czekać</p>
+                    </>
+                );
+            }
+        }
         else if (this.state.state === 'error') {
             return (
                 <>
@@ -327,8 +440,8 @@ function ProductDataList(props) {
         product_data_info.push(
             <div className="SingleObject" key={product_data.ID}>
                 <div>Nazwa Produktu: {product_data.name} waga: {product_data.weight} <button id={product_data.ID} type="button" className="edit_button" onClick={e => props.callback(e.target.id)}>Edytuj</button></div>
-                <div>Nazwa Typu: {product_data.type.name}  <button id={product_data.ID} type="button" className="edit_button" >Edytuj</button></div>
-                <div>Nazwa Producenta: {product_data.manufacturer.name} <button id={product_data.ID} type="button" className="edit_button" >Edytuj</button></div>
+                <div>Nazwa Typu: {product_data.type.name} </div>
+                <div>Nazwa Producenta: {product_data.manufacturer.name}</div>
             </div>
         );
     }
